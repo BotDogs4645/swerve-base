@@ -1,13 +1,15 @@
-package frc.robot;
+package frc.swervelib.util;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.bd_util.custom_talon.SensorUnits;
+import frc.bd_util.custom_talon.TalonFXW;
+import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.Constants.Swerve;
 import frc.swervelib.math.Conversions;
-import frc.swervelib.util.CTREModuleState;
-import frc.swervelib.util.SwerveModuleConstants;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
@@ -17,8 +19,8 @@ import com.ctre.phoenix.sensors.CANCoder;
 public class SwerveModule {
     public int moduleNumber;
     private double angleOffset;
-    private TalonFX mAngleMotor;
-    private TalonFX mDriveMotor;
+    private TalonFXW mAngleMotor;
+    private TalonFXW mDriveMotor;
     private CANCoder angleEncoder;
     private double lastAngle;
 
@@ -33,11 +35,11 @@ public class SwerveModule {
         configAngleEncoder();
 
         /* Angle Motor Config */
-        mAngleMotor = new TalonFX(moduleConstants.angleMotorID);
+        mAngleMotor = new TalonFXW(moduleConstants.angleMotorID, "canivore", Robot.ctreConfigs.angle_config);
         configAngleMotor();
 
         /* Drive Motor Config */
-        mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
+        mDriveMotor = new TalonFXW(moduleConstants.driveMotorID, "canivore", SensorUnits.METRIC, Robot.ctreConfigs.drive_config);
         configDriveMotor();
 
         lastAngle = getState().angle.getDegrees();
@@ -60,12 +62,12 @@ public class SwerveModule {
         lastAngle = angle;
     }
 
-    private void resetToAbsolute(){
+    private void resetToAbsolute() {
         double absolutePosition = Conversions.degreesToFalcon(getCanCoder().getDegrees() - angleOffset, Constants.Swerve.angleGearRatio);
         mAngleMotor.setSelectedSensorPosition(absolutePosition);
     }
 
-    private void configAngleEncoder(){        
+    private void configAngleEncoder() {        
         angleEncoder.configFactoryDefault();
         angleEncoder.configAllSettings(Robot.ctreConfigs.swerveCanCoderConfig);
     }

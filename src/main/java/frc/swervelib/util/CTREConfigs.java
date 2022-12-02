@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.swervelib.util;
 
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
@@ -7,16 +7,26 @@ import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 
+import edu.wpi.first.math.util.Units;
+import frc.bd_util.custom_talon.TalonFXWConfig;
+import frc.robot.Constants;
+import frc.robot.Constants.Swerve;
+
 public final class CTREConfigs {
     public TalonFXConfiguration swerveAngleFXConfig;
     public TalonFXConfiguration swerveDriveFXConfig;
     public CANCoderConfiguration swerveCanCoderConfig;
 
+    public TalonFXWConfig drive_config;
+    public TalonFXWConfig angle_config;
 
     public CTREConfigs(){
         swerveAngleFXConfig = new TalonFXConfiguration();
         swerveDriveFXConfig = new TalonFXConfiguration();
         swerveCanCoderConfig = new CANCoderConfiguration();
+
+        this.drive_config = new TalonFXWConfig(Swerve.driveGearRatio, Units.metersToInches(Swerve.wheelDiameter));
+        this.angle_config = new TalonFXWConfig(Swerve.angleGearRatio, Units.metersToInches(Swerve.wheelDiameter));
 
         /* Swerve Angle Motor Configurations */
         SupplyCurrentLimitConfiguration angleSupplyLimit = new SupplyCurrentLimitConfiguration(
