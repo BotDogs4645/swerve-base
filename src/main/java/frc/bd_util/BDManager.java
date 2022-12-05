@@ -52,7 +52,6 @@ public class BDManager {
     public void update() {
         for (BDUpdatable item: update_list) {
             item.update();
-            item.updateStatus();
         }
     }
 }

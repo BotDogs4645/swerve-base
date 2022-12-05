@@ -114,7 +114,7 @@ public class TalonFXW extends WPI_TalonFX implements BDUpdatable {
      * <b>CTRE:</b> Total wheel rotations in well.. rotations.
      * @return The total wheel rotations in selected unit.
      */
-    public double getObjectTotalDistanceTravelled() {
+    public double getObjectTotalDistanceTraveled() {
         if (sensor_units == SensorUnits.METRIC) {
             double wheelRotations = (getShaftRotations() / configuration.getGearing());
             return Units.feetToMeters(wheelRotations * configuration.getDiameter() * Math.PI);
@@ -130,9 +130,9 @@ public class TalonFXW extends WPI_TalonFX implements BDUpdatable {
 
     /**
      * Depending on the sensor mode, you will either get:<p>
-     * <b>Metric:</b> Current wheel rotations in meters per second
-     * <b>Imperial:</b> Current wheel rotations in feet per second
-     * <b>CTRE:</b> Current wheel rotations in rotations per second.
+     * <b>Metric:</b> Current wheel rotations in meters per second<p>
+     * <b>Imperial:</b> Current wheel rotations in feet per second<p>
+     * <b>CTRE:</b> Current wheel rotations in rotations per second.<p>
      * @return The wheel velocity in selected unit.
      */
     public double getObjectConvertedVelocity() {
@@ -163,9 +163,9 @@ public class TalonFXW extends WPI_TalonFX implements BDUpdatable {
         super.setSelectedSensorPosition(0, 0, 0);
     }
 
-    public void update() {}
-
-    public void updateStatus() {}
+    public void update() {
+        
+    }
 
     public String getID() {
         return "TalonFXW " + id;

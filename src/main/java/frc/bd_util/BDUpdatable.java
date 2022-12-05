@@ -5,7 +5,5 @@ public interface BDUpdatable {
     
     public abstract String getID();
 
-    public abstract void updateStatus();
-
     public abstract String getStatus();
 }

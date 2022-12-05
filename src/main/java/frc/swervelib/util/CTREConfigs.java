@@ -10,23 +10,19 @@ import com.ctre.phoenix.sensors.SensorTimeBase;
 import edu.wpi.first.math.util.Units;
 import frc.bd_util.custom_talon.TalonFXWConfig;
 import frc.robot.Constants;
-import frc.robot.Constants.Swerve;
 
 public final class CTREConfigs {
     public TalonFXConfiguration swerveAngleFXConfig;
     public TalonFXConfiguration swerveDriveFXConfig;
     public CANCoderConfiguration swerveCanCoderConfig;
 
-    public TalonFXWConfig drive_config;
-    public TalonFXWConfig angle_config;
+    public TalonFXWConfig angleFXWConfig;
+    public TalonFXWConfig driveFXWConfig;
 
     public CTREConfigs(){
         swerveAngleFXConfig = new TalonFXConfiguration();
         swerveDriveFXConfig = new TalonFXConfiguration();
         swerveCanCoderConfig = new CANCoderConfiguration();
-
-        this.drive_config = new TalonFXWConfig(Swerve.driveGearRatio, Units.metersToInches(Swerve.wheelDiameter));
-        this.angle_config = new TalonFXWConfig(Swerve.angleGearRatio, Units.metersToInches(Swerve.wheelDiameter));
 
         /* Swerve Angle Motor Configurations */
         SupplyCurrentLimitConfiguration angleSupplyLimit = new SupplyCurrentLimitConfiguration(
@@ -42,6 +38,8 @@ public final class CTREConfigs {
         swerveAngleFXConfig.supplyCurrLimit = angleSupplyLimit;
         swerveAngleFXConfig.initializationStrategy = SensorInitializationStrategy.BootToZero;
 
+        angleFXWConfig = new TalonFXWConfig(Constants.Swerve.angleGearRatio, Units.metersToInches(Constants.Swerve.wheelDiameter));
+        driveFXWConfig = new TalonFXWConfig(Constants.Swerve.driveGearRatio, Units.metersToInches(Constants.Swerve.wheelDiameter));
 
         /* Swerve Drive Motor Configuration */
         SupplyCurrentLimitConfiguration driveSupplyLimit = new SupplyCurrentLimitConfiguration(

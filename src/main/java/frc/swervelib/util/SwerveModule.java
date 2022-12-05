@@ -4,16 +4,17 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.bd_util.custom_talon.SensorUnits;
 import frc.bd_util.custom_talon.TalonFXW;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.Constants.Swerve;
 import frc.swervelib.math.Conversions;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 
 public class SwerveModule {
@@ -24,9 +25,11 @@ public class SwerveModule {
     private CANCoder angleEncoder;
     private double lastAngle;
 
+    private ShuffleboardLayout layout;
+
     SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
 
-    public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants){
+    public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants, ShuffleboardTab sub_tab){
         this.moduleNumber = moduleNumber;
         angleOffset = moduleConstants.angleOffset;
         
@@ -35,14 +38,20 @@ public class SwerveModule {
         configAngleEncoder();
 
         /* Angle Motor Config */
-        mAngleMotor = new TalonFXW(moduleConstants.angleMotorID, "canivore", Robot.ctreConfigs.angle_config);
+        mAngleMotor = new TalonFXW(moduleConstants.angleMotorID, SensorUnits.METRIC, Robot.ctreConfigs.angleFXWConfig);
         configAngleMotor();
 
         /* Drive Motor Config */
-        mDriveMotor = new TalonFXW(moduleConstants.driveMotorID, "canivore", SensorUnits.METRIC, Robot.ctreConfigs.drive_config);
+        mDriveMotor = new TalonFXW(moduleConstants.driveMotorID, SensorUnits.METRIC, Robot.ctreConfigs.driveFXWConfig);
         configDriveMotor();
 
         lastAngle = getState().angle.getDegrees();
+
+        layout = sub_tab.getLayout("mod " + moduleNumber, BuiltInLayouts.kList);
+
+        layout.addDouble("Cancoder", () -> getCanCoder().getDegrees());
+        layout.addDouble("Integrated", () -> getState().angle.getDegrees());
+        layout.addDouble("Velocity", () -> getState().speedMetersPerSecond);    
     }
 
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){
@@ -99,12 +108,8 @@ public class SwerveModule {
     }
     
     public SwerveModulePosition getSwervePosition() {
-        double wheelRotations = 
-            (mDriveMotor.getSelectedSensorPosition() / 2048) / Swerve.driveGearRatio;
-        double distance_meters = 
-            wheelRotations * Swerve.wheelDiameter * Math.PI;
         Rotation2d angle = Rotation2d.fromDegrees(Conversions.falconToDegrees(mAngleMotor.getSelectedSensorPosition(), Constants.Swerve.angleGearRatio));
-        return new SwerveModulePosition(distance_meters, angle);
+        return new SwerveModulePosition(mDriveMotor.getObjectTotalDistanceTraveled(), angle);
     }
 
 }
