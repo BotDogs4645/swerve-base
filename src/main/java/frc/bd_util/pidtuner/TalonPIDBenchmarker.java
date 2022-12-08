@@ -5,7 +5,7 @@
 package frc.bd_util.pidtuner;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class TalonPIDBenchmarker extends CommandBase {
   /** Creates a new TalonPIDBenchmarker. */
   private PIDTunerTalon tuner;
-  private WPI_TalonFX to_tune;
+  private TalonFX to_tune;
   private SimpleWidget bench_reporter;
   private GenericEntry time;
 
@@ -32,7 +32,7 @@ public class TalonPIDBenchmarker extends CommandBase {
 
   private double start_time;
 
-  public TalonPIDBenchmarker(PIDTunerTalon tuner, WPI_TalonFX to_tune, SimpleWidget bench_reporter, GenericEntry time) {
+  public TalonPIDBenchmarker(PIDTunerTalon tuner, TalonFX to_tune, SimpleWidget bench_reporter, GenericEntry time) {
     this.tuner = tuner;
     this.to_tune = to_tune;
     this.bench_reporter = bench_reporter;

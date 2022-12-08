@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.shuffleboard.SuppliedValueWidget;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 public class PIDTunerTalon {
-    WPI_TalonFX tuning_motor;
+    TalonFX tuning_motor;
     ShuffleboardTab subsystem_tab;
     int id;
     int modifier = 1;
@@ -40,7 +40,7 @@ public class PIDTunerTalon {
     SimpleWidget kIwidgetDirect;
     SimpleWidget kDwidgetDirect;
 
-    public PIDTunerTalon(WPI_TalonFX tuning_motor, ShuffleboardTab tab) {
+    public PIDTunerTalon(TalonFX tuning_motor, ShuffleboardTab tab) {
         this.tuning_motor = tuning_motor;
         this.subsystem_tab = tab;
         this.id = tuning_motor.getDeviceID();
@@ -74,7 +74,7 @@ public class PIDTunerTalon {
         
         // kP
         ShuffleboardLayout kPLayout = subsystem_tab.getLayout("kP Settings", BuiltInLayouts.kList)
-        .withSize(2, 2)
+        .withSize(2, 1)
         .withPosition(0, 0);
 
         this.kPwidgetDirect = kPLayout.add("kP Direct", 1.0);
@@ -89,8 +89,8 @@ public class PIDTunerTalon {
 
         // kI
         ShuffleboardLayout kILayout = subsystem_tab.getLayout("kI Settings", BuiltInLayouts.kList)
-        .withPosition(8, 3)
-        .withSize(2,2);
+        .withPosition(0, 1)
+        .withSize(2,1);
 
         this.kIwidgetDirect = kILayout.add("kI Direct", 1.0);
         inst.addListener(kIwidgetDirect.getEntry(), EnumSet.of(Kind.kValueAll), event -> {
@@ -104,7 +104,7 @@ public class PIDTunerTalon {
         // kD
         ShuffleboardLayout kDLayout = subsystem_tab.getLayout("kD Settings", BuiltInLayouts.kList)
         .withPosition(0, 2)
-        .withSize(2, 2);
+        .withSize(2, 1);
 
         this.kDwidgetDirect = kDLayout.add("kD Direct", 1.0);
         inst.addListener(kDwidgetDirect.getEntry(), EnumSet.of(Kind.kValueAll), event -> {
@@ -118,7 +118,7 @@ public class PIDTunerTalon {
         // FF
         ShuffleboardLayout FFLayout = subsystem_tab.getLayout("FF Settings", BuiltInLayouts.kList)
         .withSize(2, 1)
-        .withPosition(0, 4);
+        .withPosition(0, 3);
         
         SimpleWidget FFTune = FFLayout.add("FF Tune Direct", 1.0);
 

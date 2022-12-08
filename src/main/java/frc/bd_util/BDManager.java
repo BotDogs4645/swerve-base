@@ -40,12 +40,23 @@ public class BDManager {
         update_list = new ArrayList<BDUpdatable>();
         tab = Shuffleboard.getTab("BDManager");
         status_layout = tab.getLayout("BD Device Statuses", BuiltInLayouts.kGrid);
+        status_layout.withSize(4, 4)
+        .withPosition(0, 0);
     }
 
     public void register(BDUpdatable item) {
         if (isInstantiated()) {
             update_list.add(item);
             status_layout.addString(item.getID(), () -> item.getStatus());
+        }
+    }
+
+    public ShuffleboardTab getInstanceManagerialTab() {
+        if (isInstantiated()) {
+            return tab;
+        } else {
+            DriverStation.reportError("Cannot access BDManager shuffleboard tab w/o being instantiated first.", false);
+            return null;
         }
     }
 

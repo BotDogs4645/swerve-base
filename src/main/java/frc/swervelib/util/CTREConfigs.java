@@ -9,7 +9,6 @@ import com.ctre.phoenix.sensors.SensorTimeBase;
 
 import edu.wpi.first.math.util.Units;
 import frc.bd_util.custom_talon.TalonFXWConfig;
-import frc.robot.Constants;
 
 public final class CTREConfigs {
     public TalonFXConfiguration swerveAngleFXConfig;
@@ -26,41 +25,41 @@ public final class CTREConfigs {
 
         /* Swerve Angle Motor Configurations */
         SupplyCurrentLimitConfiguration angleSupplyLimit = new SupplyCurrentLimitConfiguration(
-            Constants.Swerve.angleEnableCurrentLimit, 
-            Constants.Swerve.angleContinuousCurrentLimit, 
-            Constants.Swerve.anglePeakCurrentLimit, 
-            Constants.Swerve.anglePeakCurrentDuration);
+            SwerveConstants.Swerve.angleEnableCurrentLimit, 
+            SwerveConstants.Swerve.angleContinuousCurrentLimit, 
+            SwerveConstants.Swerve.anglePeakCurrentLimit, 
+            SwerveConstants.Swerve.anglePeakCurrentDuration);
 
-        swerveAngleFXConfig.slot0.kP = Constants.Swerve.angleKP;
-        swerveAngleFXConfig.slot0.kI = Constants.Swerve.angleKI;
-        swerveAngleFXConfig.slot0.kD = Constants.Swerve.angleKD;
-        swerveAngleFXConfig.slot0.kF = Constants.Swerve.angleKF;
+        swerveAngleFXConfig.slot0.kP = SwerveConstants.Swerve.angleKP;
+        swerveAngleFXConfig.slot0.kI = SwerveConstants.Swerve.angleKI;
+        swerveAngleFXConfig.slot0.kD = SwerveConstants.Swerve.angleKD;
+        swerveAngleFXConfig.slot0.kF = SwerveConstants.Swerve.angleKF;
         swerveAngleFXConfig.supplyCurrLimit = angleSupplyLimit;
         swerveAngleFXConfig.initializationStrategy = SensorInitializationStrategy.BootToZero;
 
-        angleFXWConfig = new TalonFXWConfig(Constants.Swerve.angleGearRatio, Units.metersToInches(Constants.Swerve.wheelDiameter));
-        driveFXWConfig = new TalonFXWConfig(Constants.Swerve.driveGearRatio, Units.metersToInches(Constants.Swerve.wheelDiameter));
+        angleFXWConfig = new TalonFXWConfig(SwerveConstants.Swerve.angleGearRatio, Units.metersToInches(SwerveConstants.Swerve.wheelDiameter));
+        driveFXWConfig = new TalonFXWConfig(SwerveConstants.Swerve.driveGearRatio, Units.metersToInches(SwerveConstants.Swerve.wheelDiameter));
 
         /* Swerve Drive Motor Configuration */
         SupplyCurrentLimitConfiguration driveSupplyLimit = new SupplyCurrentLimitConfiguration(
-            Constants.Swerve.driveEnableCurrentLimit, 
-            Constants.Swerve.driveContinuousCurrentLimit, 
-            Constants.Swerve.drivePeakCurrentLimit, 
-            Constants.Swerve.drivePeakCurrentDuration);
+            SwerveConstants.Swerve.driveEnableCurrentLimit, 
+            SwerveConstants.Swerve.driveContinuousCurrentLimit, 
+            SwerveConstants.Swerve.drivePeakCurrentLimit, 
+            SwerveConstants.Swerve.drivePeakCurrentDuration);
 
-        swerveDriveFXConfig.slot0.kP = Constants.Swerve.driveKP;
-        swerveDriveFXConfig.slot0.kI = Constants.Swerve.driveKI;
-        swerveDriveFXConfig.slot0.kD = Constants.Swerve.driveKD;
-        swerveDriveFXConfig.slot0.kF = Constants.Swerve.driveKF;        
+        swerveDriveFXConfig.slot0.kP = SwerveConstants.Swerve.driveKP;
+        swerveDriveFXConfig.slot0.kI = SwerveConstants.Swerve.driveKI;
+        swerveDriveFXConfig.slot0.kD = SwerveConstants.Swerve.driveKD;
+        swerveDriveFXConfig.slot0.kF = SwerveConstants.Swerve.driveKF;        
         swerveDriveFXConfig.supplyCurrLimit = driveSupplyLimit;
         swerveDriveFXConfig.initializationStrategy = SensorInitializationStrategy.BootToZero;
-        swerveDriveFXConfig.openloopRamp = Constants.Swerve.openLoopRamp;
-        swerveDriveFXConfig.closedloopRamp = Constants.Swerve.closedLoopRamp;
+        swerveDriveFXConfig.openloopRamp = SwerveConstants.Swerve.openLoopRamp;
+        swerveDriveFXConfig.closedloopRamp = SwerveConstants.Swerve.closedLoopRamp;
 
         
         /* Swerve CANCoder Configuration */
         swerveCanCoderConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-        swerveCanCoderConfig.sensorDirection = Constants.Swerve.canCoderInvert;
+        swerveCanCoderConfig.sensorDirection = SwerveConstants.Swerve.canCoderInvert;
         swerveCanCoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         swerveCanCoderConfig.sensorTimeBase = SensorTimeBase.PerSecond;
     }

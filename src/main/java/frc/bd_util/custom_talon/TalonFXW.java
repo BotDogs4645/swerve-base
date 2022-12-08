@@ -38,7 +38,7 @@ public class TalonFXW extends WPI_TalonFX implements BDUpdatable {
      * @param configuration the {@link TalonFXWConfig} configuration that signifies the gearing ratio and attached object diameter of the motor.
     */
     public TalonFXW(int can_id, String can_bus, TalonFXWConfig configuration) {
-        super(can_id, can_bus);
+        super(can_id);
         this.configuration = configuration;
         this.id = can_id;
 
@@ -68,7 +68,7 @@ public class TalonFXW extends WPI_TalonFX implements BDUpdatable {
      * @param configuration the {@link TalonFXWConfig} configuration that signifies the gearing ratio and attached object diameter of the motor.
     */
     public TalonFXW(int can_id, String can_bus, SensorUnits sensor_units, TalonFXWConfig configuration) {
-        super(can_id, can_bus);
+        super(can_id);
         this.sensor_units = sensor_units;
         this.id = can_id;
 

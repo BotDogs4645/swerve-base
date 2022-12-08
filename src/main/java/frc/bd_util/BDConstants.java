@@ -14,7 +14,7 @@ import java.util.HashMap;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class Constants {
+public final class BDConstants {
     public static final class UTIL_CONSTANTS { 
         public static final class OPTIONS {
             public static final String[] RESOLUTIONS = {

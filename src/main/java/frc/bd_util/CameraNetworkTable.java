@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.bd_util.Constants.UTIL_CONSTANTS.CAMERA_DEFAULTS.*;
+import frc.bd_util.BDConstants.UTIL_CONSTANTS.CAMERA_DEFAULTS.*;
 import frc.bd_util.widgets.BooleanWidget;
 import frc.bd_util.widgets.NumberSliderWidget;
 
