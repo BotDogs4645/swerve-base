@@ -8,7 +8,11 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public final class SwerveConstants {
-    public static final double stickDeadband = 0.1;
+    public static double deadzone = 0.04;
+
+    public static final int leftX = 1;
+    public static final int leftY = 0;
+    public static final int rightX = 2; 
 
     public static final class Swerve {
         public static final int pigeonID = 1;
@@ -49,11 +53,11 @@ public final class SwerveConstants {
         /* Angle Motor PID Values */
         public static final double angleKP = 0.6;
         public static final double angleKI = 0.0;
-        public static final double angleKD = 12.0;
+        public static final double angleKD = 14.0;
         public static final double angleKF = 0.0;
 
         /* Drive Motor PID Values */
-        public static final double driveKP = 0.10;
+        public static final double driveKP = 0.025;
         public static final double driveKI = 0.0;
         public static final double driveKD = 0.0;
         public static final double driveKF = 0.0;
@@ -64,8 +68,8 @@ public final class SwerveConstants {
         public static final double driveKA = (0.27 / 12);
 
         /* Swerve Profiling Values */
-        public static final double maxSpeed = 4.5; //meters per second
-        public static final double maxAngularVelocity = 11.5;
+        public static double maxSpeed = 1; //meters per second * 4.5
+        public static double maxAngularVelocity = 11.5;
 
         /* Neutral Modes */
         public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
@@ -77,12 +81,6 @@ public final class SwerveConstants {
 
         /* Angle Encoder Invert */
         public static final boolean canCoderInvert = false;
-
-
-        /*
-        * boolean[0] = drive
-        * boolean[1] = angle
-        */
 
         public enum testing_type {
             NONE,

@@ -1,6 +1,6 @@
 package frc.swervelib.util;
 
-import frc.robot.Constants.Swerve.testing_type;
+import frc.swervelib.util.SwerveConstants.Swerve.testing_type;
 
 public class SwerveModuleConstants {
     public final int driveMotorID;
