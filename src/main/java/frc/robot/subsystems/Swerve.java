@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.HashMap;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 import frc.robot.Robot;
@@ -108,6 +109,12 @@ public class Swerve extends SubsystemBase {
         Robot.ctreConfigs.swerveDriveFXConfig.closedloopRamp = Double.parseDouble(settings.get("closed_ramp"));
         SwerveConstants.Swerve.maxSpeed = Double.parseDouble(settings.get("max_speed"));
         SwerveConstants.Swerve.maxAngularVelocity = Double.parseDouble(settings.get("max_angular_velocity"));
+        SwerveConstants.Swerve.angleNeutralMode = Boolean.parseBoolean(settings.get("brake_angle")) ? NeutralMode.Brake : NeutralMode.Coast;
+        SwerveConstants.Swerve.driveNeutralMode = Boolean.parseBoolean(settings.get("brake_drive")) ? NeutralMode.Brake : NeutralMode.Coast;
+
+        for (SwerveModule swerve_module: mSwerveMods) {
+            swerve_module.reapplyConfig();
+        }
     }
 
     public Rotation2d getYaw() {

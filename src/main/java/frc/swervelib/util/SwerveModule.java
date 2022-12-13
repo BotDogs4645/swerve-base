@@ -16,6 +16,7 @@ import frc.swervelib.util.SwerveConstants.Swerve.testing_type;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.sensors.CANCoder;
 
 public class SwerveModule {
@@ -99,15 +100,28 @@ public class SwerveModule {
     }
 
     public void reapplyConfig() {
-        mAngleMotor.configFactoryDefault();
-        mAngleMotor.configAllSettings(Robot.ctreConfigs.swerveAngleFXConfig);
+        TalonFXConfiguration configAngle = new TalonFXConfiguration();
+
+        mAngleMotor.getAllConfigs(configAngle);
+
+        configAngle.closedloopRamp = SwerveConstants.Swerve.closedLoopRamp;
+        configAngle.openloopRamp = SwerveConstants.Swerve.openLoopRamp;
+
         mAngleMotor.setInverted(SwerveConstants.Swerve.angleMotorInvert);
         mAngleMotor.setNeutralMode(SwerveConstants.Swerve.angleNeutralMode);
+        mAngleMotor.configAllSettings(configAngle);
 
-        mDriveMotor.configFactoryDefault();
-        mDriveMotor.configAllSettings(Robot.ctreConfigs.swerveDriveFXConfig);
+
+        TalonFXConfiguration configDrive = new TalonFXConfiguration();
+        
+        mDriveMotor.getAllConfigs(configDrive);
+
+        configDrive.closedloopRamp = SwerveConstants.Swerve.closedLoopRamp;
+        configDrive.openloopRamp = SwerveConstants.Swerve.openLoopRamp;
+
         mDriveMotor.setInverted(SwerveConstants.Swerve.driveMotorInvert);
         mDriveMotor.setNeutralMode(SwerveConstants.Swerve.driveNeutralMode);
+        mDriveMotor.configAllSettings(configDrive);
     }
 
     private void configDriveMotor() {        

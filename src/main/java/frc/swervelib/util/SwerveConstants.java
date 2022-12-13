@@ -72,8 +72,8 @@ public final class SwerveConstants {
         public static double maxAngularVelocity = 11.5;
 
         /* Neutral Modes */
-        public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
-        public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
+        public static NeutralMode angleNeutralMode = NeutralMode.Coast;
+        public static NeutralMode driveNeutralMode = NeutralMode.Brake;
 
         /* Motor Inverts */
         public static final boolean driveMotorInvert = false;
