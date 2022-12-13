@@ -7,8 +7,12 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
-public final class SwerveConstants {
-    public static final double stickDeadband = 0.1;
+public final class SwerveSettings {
+    public static double deadzone = 0.04;
+
+    public static final int leftX = 1;
+    public static final int leftY = 0;
+    public static final int rightX = 2; 
 
     public static final class Swerve {
         public static final int pigeonID = 1;
@@ -49,11 +53,11 @@ public final class SwerveConstants {
         /* Angle Motor PID Values */
         public static final double angleKP = 0.6;
         public static final double angleKI = 0.0;
-        public static final double angleKD = 12.0;
+        public static final double angleKD = 14.0;
         public static final double angleKF = 0.0;
 
         /* Drive Motor PID Values */
-        public static final double driveKP = 0.10;
+        public static final double driveKP = 0.025;
         public static final double driveKI = 0.0;
         public static final double driveKD = 0.0;
         public static final double driveKF = 0.0;
@@ -64,12 +68,12 @@ public final class SwerveConstants {
         public static final double driveKA = (0.27 / 12);
 
         /* Swerve Profiling Values */
-        public static final double maxSpeed = 4.5; //meters per second
-        public static final double maxAngularVelocity = 11.5;
+        public static double maxSpeed = 1; //meters per second * 4.5
+        public static double maxAngularVelocity = 11.5;
 
         /* Neutral Modes */
-        public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
-        public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
+        public static NeutralMode angleNeutralMode = NeutralMode.Coast;
+        public static NeutralMode driveNeutralMode = NeutralMode.Brake;
 
         /* Motor Inverts */
         public static final boolean driveMotorInvert = false;
@@ -78,13 +82,7 @@ public final class SwerveConstants {
         /* Angle Encoder Invert */
         public static final boolean canCoderInvert = false;
 
-
-        /*
-        * boolean[0] = drive
-        * boolean[1] = angle
-        */
-
-        public enum testing_type {
+        public enum TESTING_TYPE {
             NONE,
             STEER,
             DRIVE
@@ -98,7 +96,7 @@ public final class SwerveConstants {
             public static final int canCoderID = 11;
             public static final double angleOffset = 176.66;
             public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, testing_type.NONE);
+                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, TESTING_TYPE.NONE);
         }
 
         /* Front Right Module - Module 1 */
@@ -108,7 +106,7 @@ public final class SwerveConstants {
             public static final int canCoderID = 12;
             public static final double angleOffset = 142.99;
             public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, testing_type.NONE);
+                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, TESTING_TYPE.NONE);
         }
         
         /* Back Left Module - Module 2 */
@@ -118,7 +116,7 @@ public final class SwerveConstants {
             public static final int canCoderID = 9;
             public static final double angleOffset = -75.67;
             public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, testing_type.NONE);
+                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, TESTING_TYPE.NONE);
         }
 
         /* Back Right Module - Module 3 */
@@ -128,7 +126,7 @@ public final class SwerveConstants {
             public static final int canCoderID = 10;
             public static final double angleOffset = -101.601;
             public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, testing_type.NONE);
+                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, TESTING_TYPE.NONE);
         }
 
     }

@@ -2,7 +2,15 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/Shuffleboard/Driver Profile Manager/Profile/Profile Chooser": "String Chooser"
+      "/Shuffleboard/Driver Profile Manager/Profile/Profile Chooser": "String Chooser",
+      "/Shuffleboard/Driver Profile Manager/SendableChooser[1]": "String Chooser"
+    }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "Shuffleboard": {
+        "open": true
+      }
     }
   }
 }
