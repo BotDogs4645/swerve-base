@@ -1,7 +1,7 @@
 package frc.robot.autos;
 
 import frc.robot.subsystems.Swerve;
-import frc.swervelib.util.SwerveConstants;
+import frc.swervelib.util.SwerveSettings;
 
 import java.util.List;
 
@@ -21,9 +21,9 @@ public class ExampleAuto1 extends SequentialCommandGroup {
     public ExampleAuto1(Swerve s_Swerve){
         TrajectoryConfig config =
             new TrajectoryConfig(
-                    SwerveConstants.AutoConstants.kMaxSpeedMetersPerSecond,
-                    SwerveConstants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-                .setKinematics(SwerveConstants.Swerve.swerveKinematics);
+                    SwerveSettings.AutoConstants.kMaxSpeedMetersPerSecond,
+                    SwerveSettings.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+                .setKinematics(SwerveSettings.Swerve.swerveKinematics);
 
         // An example trajectory to follow.  All units in meters.
         Trajectory exampleTrajectory =
@@ -38,16 +38,16 @@ public class ExampleAuto1 extends SequentialCommandGroup {
 
         var thetaController =
             new ProfiledPIDController(
-                SwerveConstants.AutoConstants.kPThetaController, 0, 0, SwerveConstants.AutoConstants.kThetaControllerConstraints);
+                SwerveSettings.AutoConstants.kPThetaController, 0, 0, SwerveSettings.AutoConstants.kThetaControllerConstraints);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
         SwerveControllerCommand swerveControllerCommand =
             new SwerveControllerCommand(
                 exampleTrajectory,
                 s_Swerve::getPose,
-                SwerveConstants.Swerve.swerveKinematics,
-                new PIDController(SwerveConstants.AutoConstants.kPXController, 0, 0),
-                new PIDController(SwerveConstants.AutoConstants.kPYController, 0, 0),
+                SwerveSettings.Swerve.swerveKinematics,
+                new PIDController(SwerveSettings.AutoConstants.kPXController, 0, 0),
+                new PIDController(SwerveSettings.AutoConstants.kPYController, 0, 0),
                 thetaController,
                 s_Swerve::setModuleStates,
                 s_Swerve);

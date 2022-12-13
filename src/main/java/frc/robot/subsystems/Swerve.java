@@ -6,7 +6,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 import frc.robot.Robot;
-import frc.swervelib.util.SwerveConstants;
+import frc.swervelib.util.SwerveSettings;
 import frc.swervelib.util.SwerveModule;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -29,25 +29,25 @@ public class Swerve extends SubsystemBase {
 
     
     public Swerve() {
-        gyro = new PigeonIMU(SwerveConstants.Swerve.pigeonID);
+        gyro = new PigeonIMU(SwerveSettings.Swerve.pigeonID);
         gyro.configFactoryDefault();
         zeroGyro();
         
         sub_tab = Shuffleboard.getTab("swerve_tab2");
 
         mSwerveMods = new SwerveModule[] {
-            new SwerveModule(0, SwerveConstants.Swerve.Mod0.constants, sub_tab),
-            new SwerveModule(1, SwerveConstants.Swerve.Mod1.constants, sub_tab),
-            new SwerveModule(2, SwerveConstants.Swerve.Mod2.constants, sub_tab),
-            new SwerveModule(3, SwerveConstants.Swerve.Mod3.constants, sub_tab)
+            new SwerveModule(0, SwerveSettings.Swerve.Mod0.constants, sub_tab),
+            new SwerveModule(1, SwerveSettings.Swerve.Mod1.constants, sub_tab),
+            new SwerveModule(2, SwerveSettings.Swerve.Mod2.constants, sub_tab),
+            new SwerveModule(3, SwerveSettings.Swerve.Mod3.constants, sub_tab)
         };
 
-        swerveOdometry = new SwerveDriveOdometry(SwerveConstants.Swerve.swerveKinematics, getYaw(), getModulePositions());
+        swerveOdometry = new SwerveDriveOdometry(SwerveSettings.Swerve.swerveKinematics, getYaw(), getModulePositions());
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
         SwerveModuleState[] swerveModuleStates =
-            SwerveConstants.Swerve.swerveKinematics.toSwerveModuleStates(
+            SwerveSettings.Swerve.swerveKinematics.toSwerveModuleStates(
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
                                     translation.getX(), 
                                     translation.getY(), 
@@ -59,7 +59,7 @@ public class Swerve extends SubsystemBase {
                                     translation.getY(), 
                                     rotation)
                                 );
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.Swerve.maxSpeed);
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveSettings.Swerve.maxSpeed);
 
         for(SwerveModule mod : mSwerveMods){
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
@@ -68,7 +68,7 @@ public class Swerve extends SubsystemBase {
 
     /* Used by SwerveControllerCommand in Auto */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.Swerve.maxSpeed);
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveSettings.Swerve.maxSpeed);
         
         for(SwerveModule mod : mSwerveMods){
             mod.setDesiredState(desiredStates[mod.moduleNumber], false);
@@ -104,13 +104,13 @@ public class Swerve extends SubsystemBase {
     }
     
     public void updatePreferences(HashMap<String, String> settings) {
-        SwerveConstants.deadzone = Double.parseDouble(settings.get("stick_deadband"));
+        SwerveSettings.deadzone = Double.parseDouble(settings.get("stick_deadband"));
         Robot.ctreConfigs.swerveDriveFXConfig.openloopRamp = Double.parseDouble(settings.get("open_ramp"));
         Robot.ctreConfigs.swerveDriveFXConfig.closedloopRamp = Double.parseDouble(settings.get("closed_ramp"));
-        SwerveConstants.Swerve.maxSpeed = Double.parseDouble(settings.get("max_speed"));
-        SwerveConstants.Swerve.maxAngularVelocity = Double.parseDouble(settings.get("max_angular_velocity"));
-        SwerveConstants.Swerve.angleNeutralMode = Boolean.parseBoolean(settings.get("brake_angle")) ? NeutralMode.Brake : NeutralMode.Coast;
-        SwerveConstants.Swerve.driveNeutralMode = Boolean.parseBoolean(settings.get("brake_drive")) ? NeutralMode.Brake : NeutralMode.Coast;
+        SwerveSettings.Swerve.maxSpeed = Double.parseDouble(settings.get("max_speed"));
+        SwerveSettings.Swerve.maxAngularVelocity = Double.parseDouble(settings.get("max_angular_velocity"));
+        SwerveSettings.Swerve.angleNeutralMode = Boolean.parseBoolean(settings.get("brake_angle")) ? NeutralMode.Brake : NeutralMode.Coast;
+        SwerveSettings.Swerve.driveNeutralMode = Boolean.parseBoolean(settings.get("brake_drive")) ? NeutralMode.Brake : NeutralMode.Coast;
 
         for (SwerveModule swerve_module: mSwerveMods) {
             swerve_module.reapplyConfig();
@@ -120,7 +120,7 @@ public class Swerve extends SubsystemBase {
     public Rotation2d getYaw() {
         double[] ypr = new double[3];
         gyro.getYawPitchRoll(ypr);
-        return (SwerveConstants.Swerve.invertGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
+        return (SwerveSettings.Swerve.invertGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
     }
 
     @Override
