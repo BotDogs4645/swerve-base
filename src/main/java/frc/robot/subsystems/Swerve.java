@@ -3,14 +3,13 @@ package frc.robot.subsystems;
 import java.util.HashMap;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.sensors.Pigeon2;
 
 import frc.robot.Robot;
 import frc.swervelib.util.SwerveSettings;
 import frc.swervelib.util.SwerveModule;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -25,12 +24,12 @@ public class Swerve extends SubsystemBase {
 
     public SwerveDrivePoseEstimator swerveOdometry;
     public SwerveModule[] mSwerveMods;
-    public PigeonIMU gyro;
+    public Pigeon2 gyro;
     public ShuffleboardTab sub_tab;
 
     
     public Swerve() {
-        gyro = new PigeonIMU(SwerveSettings.Swerve.pigeonID);
+        gyro = new Pigeon2(SwerveSettings.Swerve.pigeonID);
         gyro.configFactoryDefault();
         zeroGyro();
         
