@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import java.util.HashMap;
+import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.Pigeon2;
@@ -10,8 +11,8 @@ import frc.swervelib.util.SwerveSettings;
 import frc.swervelib.util.SwerveModule;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -22,17 +23,19 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
 
-    public SwerveDrivePoseEstimator swerveOdometry;
+    public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
     public ShuffleboardTab sub_tab;
-
+    public double chassis_speed; // meters / second
     
     public Swerve() {
         gyro = new Pigeon2(SwerveSettings.Swerve.pigeonID);
         gyro.configFactoryDefault();
         zeroGyro();
         
+        this.chassis_speed = 0;
+
         sub_tab = Shuffleboard.getTab("swerve_tab2");
 
         mSwerveMods = new SwerveModule[] {
@@ -42,7 +45,10 @@ public class Swerve extends SubsystemBase {
             new SwerveModule(3, SwerveSettings.Swerve.Mod3.constants, sub_tab)
         };
 
-        swerveOdometry = new SwerveDrivePoseEstimator(SwerveSettings.Swerve.swerveKinematics, getYaw(), getModulePositions(), getPose());
+        this.swerveOdometry = new SwerveDriveOdometry(SwerveSettings.Swerve.swerveKinematics, getYaw(), getModulePositions());
+
+        sub_tab.addDouble("gyro angle", () -> gyro.getYaw());
+
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -76,7 +82,7 @@ public class Swerve extends SubsystemBase {
     }    
 
     public Pose2d getPose() {
-        return swerveOdometry.getEstimatedPosition();
+        return swerveOdometry.getPoseMeters();
     }
 
     public void resetOdometry(Pose2d pose) {
@@ -115,6 +121,10 @@ public class Swerve extends SubsystemBase {
         for (SwerveModule swerve_module: mSwerveMods) {
             swerve_module.reapplyConfig();
         }
+    }
+
+    public double getChassisSpeed() {
+        return chassis_speed;
     }
 
     public Rotation2d getYaw() {
