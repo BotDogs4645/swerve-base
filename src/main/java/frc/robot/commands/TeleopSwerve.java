@@ -31,9 +31,9 @@ public class TeleopSwerve extends CommandBase {
 
     @Override
     public void execute() {
-        double yAxis = -controller.getRawAxis(SwerveSettings.leftX);
-        double xAxis = -controller.getRawAxis(SwerveSettings.leftY);
-        double rAxis = -controller.getRawAxis(SwerveSettings.rightX);
+        double yAxis = controller.getRawAxis(SwerveSettings.leftX);
+        double xAxis = controller.getRawAxis(SwerveSettings.leftY);
+        double rAxis = controller.getRawAxis(SwerveSettings.rightX);
         
         /* Deadbands */
         yAxis = (Math.abs(yAxis) < SwerveSettings.deadzone) ? 0 : yAxis;

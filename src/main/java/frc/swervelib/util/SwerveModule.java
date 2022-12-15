@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.bd_util.BDManager;
 import frc.bd_util.custom_talon.SensorUnits;
 import frc.bd_util.custom_talon.TalonFXW;
 import frc.bd_util.pidtuner.PIDTunerTalon;
@@ -15,16 +16,19 @@ import frc.robot.Robot;
 import frc.swervelib.math.Conversions;
 import frc.swervelib.util.SwerveSettings.Swerve.TESTING_TYPE;
 
+import java.util.Map;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.sensors.CANCoder;
 
 public class SwerveModule {
+    public String name;
     public int moduleNumber;
     private double angleOffset;
-    private TalonFXW mAngleMotor;
-    private TalonFXW mDriveMotor;
+    public TalonFXW mAngleMotor;
+    public TalonFXW mDriveMotor;
     private CANCoder angleEncoder;
     private double lastAngle;
 
@@ -34,6 +38,7 @@ public class SwerveModule {
 
     public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants, ShuffleboardTab sub_tab) {
         this.moduleNumber = moduleNumber;
+        name = moduleConstants.name;
         angleOffset = moduleConstants.angleOffset;
         
         /* Angle Encoder Config */
@@ -50,11 +55,23 @@ public class SwerveModule {
 
         lastAngle = getState().angle.getDegrees();
 
-        layout = sub_tab.getLayout("mod " + moduleNumber, BuiltInLayouts.kList);
+        int[] placements = SwerveSettings.ShuffleboardConstants.temp_placements.get(moduleNumber);
 
-        layout.addDouble("Cancoder", () -> getCanCoder().getDegrees());
-        layout.addDouble("Integrated", () -> getState().angle.getDegrees());
-        layout.addDouble("Velocity", () -> getState().speedMetersPerSecond);
+        layout = sub_tab.getLayout("module " + moduleNumber, BuiltInLayouts.kGrid)
+        .withProperties(Map.of("Number of columns", 1, "Number of rows", 2))
+        .withPosition(placements[0], placements[1])
+        .withSize(1, 2);
+
+        layout.addDouble("Angle Temp", () -> (mAngleMotor.getTemperature() * (9.0/5.0)) + 32); // C -> F
+        layout.addDouble("Drive Temp", () -> (mDriveMotor.getTemperature() * (9.0/5.0)) + 32);
+
+        ShuffleboardTab tab = BDManager.getInstance().getInstanceManagerialTab();
+        if (SwerveSettings.Swerve.testing) {
+            ShuffleboardLayout lay = tab.getLayout("module " + moduleNumber, BuiltInLayouts.kGrid)
+            .withProperties(Map.of("Number of columns", 1, "Number of rows", 2));
+            lay.addDouble("Cancoder", () -> getCanCoder().getDegrees());
+            lay.addDouble("Integrated", () -> getState().angle.getDegrees());
+        }
 
         if (moduleConstants.type == TESTING_TYPE.DRIVE) {
             new PIDTunerTalon(mDriveMotor, Shuffleboard.getTab("mod " + moduleNumber + " Drive PID Tuner"));

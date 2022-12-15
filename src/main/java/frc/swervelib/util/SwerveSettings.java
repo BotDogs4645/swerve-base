@@ -1,5 +1,7 @@
 package frc.swervelib.util;
 
+import java.util.ArrayList;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -12,10 +14,10 @@ public final class SwerveSettings {
 
     public static final int leftX = 1;
     public static final int leftY = 0;
-    public static final int rightX = 2; 
+    public static final int rightX = 2;
 
     public static final class Swerve {
-        public static final int pigeonID = 1;
+        public static final int pigeonID = 13;
         public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
         public static final boolean testing = true;
@@ -25,6 +27,9 @@ public final class SwerveSettings {
         public static final double wheelBase = Units.inchesToMeters(20.75);
         public static final double wheelDiameter = Units.inchesToMeters(4);
         public static final double wheelCircumference = wheelDiameter * Math.PI;
+
+        public static final double feetInAMile = 5280;
+        public static final double secondsInAnHour = 3600;
 
         public static final double openLoopRamp = 0.25;
         public static final double closedLoopRamp = 0.0;
@@ -46,7 +51,7 @@ public final class SwerveSettings {
         public static final boolean angleEnableCurrentLimit = true;
 
         public static final int driveContinuousCurrentLimit = 35;
-        public static final int drivePeakCurrentLimit = 60;
+        public static final int drivePeakCurrentLimit = 55;
         public static final double drivePeakCurrentDuration = 0.1;
         public static final boolean driveEnableCurrentLimit = true;
 
@@ -68,8 +73,8 @@ public final class SwerveSettings {
         public static final double driveKA = (0.27 / 12);
 
         /* Swerve Profiling Values */
-        public static double maxSpeed = 1; //meters per second * 4.5
-        public static double maxAngularVelocity = 11.5;
+        public static double maxSpeed = 4.5; //meters per second * 4.5
+        public static double maxAngularVelocity = 12;
 
         /* Neutral Modes */
         public static NeutralMode angleNeutralMode = NeutralMode.Coast;
@@ -94,9 +99,9 @@ public final class SwerveSettings {
             public static final int driveMotorID = 6;
             public static final int angleMotorID = 5;
             public static final int canCoderID = 11;
-            public static final double angleOffset = 176.66;
+            public static final double angleOffset = 354.64;
             public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, TESTING_TYPE.NONE);
+                new SwerveModuleConstants(driveMotorID, "Zero", angleMotorID, canCoderID, angleOffset, TESTING_TYPE.NONE);
         }
 
         /* Front Right Module - Module 1 */
@@ -104,9 +109,9 @@ public final class SwerveSettings {
             public static final int driveMotorID = 7;
             public static final int angleMotorID = 8;
             public static final int canCoderID = 12;
-            public static final double angleOffset = 142.99;
+            public static final double angleOffset = 324.32;
             public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, TESTING_TYPE.NONE);
+                new SwerveModuleConstants(driveMotorID, "One", angleMotorID, canCoderID, angleOffset, TESTING_TYPE.NONE);
         }
         
         /* Back Left Module - Module 2 */
@@ -114,9 +119,9 @@ public final class SwerveSettings {
             public static final int driveMotorID = 3;
             public static final int angleMotorID = 4;
             public static final int canCoderID = 9;
-            public static final double angleOffset = -75.67;
+            public static final double angleOffset = 102.92;
             public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, TESTING_TYPE.NONE);
+                new SwerveModuleConstants(driveMotorID, "Two", angleMotorID, canCoderID, angleOffset, TESTING_TYPE.NONE);
         }
 
         /* Back Right Module - Module 3 */
@@ -124,9 +129,9 @@ public final class SwerveSettings {
             public static final int driveMotorID = 2;
             public static final int angleMotorID = 1;
             public static final int canCoderID = 10;
-            public static final double angleOffset = -101.601;
+            public static final double angleOffset = 79.80;
             public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, TESTING_TYPE.NONE);
+                new SwerveModuleConstants(driveMotorID, "Three", angleMotorID, canCoderID, angleOffset, TESTING_TYPE.NONE);
         }
 
     }
@@ -147,4 +152,19 @@ public final class SwerveSettings {
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
       }
 
+      public static final class ShuffleboardConstants {
+        public static final ArrayList<int[]> amp_rpm_placements = new ArrayList<>();
+        public static final ArrayList<int[]> temp_placements = new ArrayList<>();
+        static {
+            amp_rpm_placements.add(new int[] {5,0});
+            amp_rpm_placements.add(new int[] {7,0});
+            amp_rpm_placements.add(new int[] {5,3});
+            amp_rpm_placements.add(new int[] {7,3});
+
+            temp_placements.add(new int[] {4, 0});
+            temp_placements.add(new int[] {9, 0});
+            temp_placements.add(new int[] {4, 3});
+            temp_placements.add(new int[] {9, 3});
+        }
+      }
 }
