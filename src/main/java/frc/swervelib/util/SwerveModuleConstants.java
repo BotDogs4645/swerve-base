@@ -7,7 +7,7 @@ public class SwerveModuleConstants {
     public final int angleMotorID;
     public final int cancoderID;
     public final double angleOffset;
-
+    public final String name;
     public final TESTING_TYPE type;
 
     /**
@@ -18,8 +18,9 @@ public class SwerveModuleConstants {
      * @param angleOffset
      * @param testing are we pid tuning?
      */
-    public SwerveModuleConstants(int driveMotorID, int angleMotorID, int canCoderID, double angleOffset, TESTING_TYPE type) {
+    public SwerveModuleConstants(int driveMotorID, String name, int angleMotorID, int canCoderID, double angleOffset, TESTING_TYPE type) {
         this.driveMotorID = driveMotorID;
+        this.name = name;
         this.angleMotorID = angleMotorID;
         this.cancoderID = canCoderID;
         this.angleOffset = angleOffset;
