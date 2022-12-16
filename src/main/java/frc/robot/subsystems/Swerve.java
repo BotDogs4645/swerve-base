@@ -2,15 +2,22 @@ package frc.robot.subsystems;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.Pigeon2;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import frc.robot.Robot;
 import frc.swervelib.util.SwerveSettings;
 import frc.swervelib.util.SwerveModule;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -24,6 +31,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
@@ -32,6 +40,8 @@ public class Swerve extends SubsystemBase {
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
     public ShuffleboardTab sub_tab;
+    public SwerveAutoBuilder builder;
+    public HashMap<String, Command> eventMap = new HashMap<>();
     public double chassis_speed; // meters / second
     public Pose2d last_pose;
     public Instant last_instant;
@@ -53,6 +63,17 @@ public class Swerve extends SubsystemBase {
         this.swerveOdometry = new SwerveDriveOdometry(SwerveSettings.Swerve.swerveKinematics, getYaw(), getModulePositions());
         last_pose = swerveOdometry.getPoseMeters();
         last_instant = Instant.now();
+
+        this.builder = new SwerveAutoBuilder(
+            this::getPose, // Pose2d supplier
+            this::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+            SwerveSettings.Swerve.swerveKinematics, // SwerveDriveKinematics
+            new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+            new PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+            this::setModuleStates, // Module states consumer used to output to the drive subsystem
+            eventMap,
+            this // The drive subsystem. Used to properly set the requirements of path following commands
+        );
 
         sub_tab.addDouble("IMU2", () -> getYaw().getDegrees())
         .withWidget(BuiltInWidgets.kGyro)
@@ -162,6 +183,29 @@ public class Swerve extends SubsystemBase {
         double[] ypr = new double[3];
         gyro.getYawPitchRoll(ypr);
         return (SwerveSettings.Swerve.invertGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
+    }
+
+    public Command getSoloCommand(PathPlannerTrajectory traj, boolean is_first) {
+        return new SequentialCommandGroup(
+            new InstantCommand(() -> {
+              // Reset odometry for the first path you run during auto
+              if(is_first){
+                  this.resetOdometry(traj.getInitialHolonomicPose());
+              }
+            }),
+            builder.followPathWithEvents(traj)
+        );
+    }
+
+    public Command getSoloCommand(PathPlannerTrajectory traj) {
+        return builder.followPathWithEvents(traj);
+    }
+
+    // Assuming this method is part of a drivetrain subsystem that provides the necessary methods
+    public Command getFullAuto(PathPlannerTrajectory... traj) {
+        ArrayList<PathPlannerTrajectory> path = new ArrayList<>(Arrays.asList(traj));
+        this.resetOdometry(traj[0].getInitialHolonomicPose());
+        return builder.fullAuto(path);
     }
 
     @Override
