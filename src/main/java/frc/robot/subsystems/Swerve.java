@@ -9,12 +9,15 @@ import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.Pigeon2;
+import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import frc.robot.Robot;
+import frc.robot.autos.ExampleAuto1;
 import frc.swervelib.util.SwerveSettings;
+import frc.swervelib.util.SwerveSettings.PATH_LIST;
 import frc.swervelib.util.SwerveModule;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -35,16 +38,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
-
+    public HashMap<String, Command> events = new HashMap<>();
+    public HashMap<PATH_LIST, Command> path_list = new HashMap<>();
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
     public ShuffleboardTab sub_tab;
     public SwerveAutoBuilder builder;
-    public HashMap<String, Command> eventMap = new HashMap<>();
     public double chassis_speed; // meters / second
     public Pose2d last_pose;
     public Instant last_instant;
+
 
     public Swerve() {
         this.gyro = new Pigeon2(SwerveSettings.Swerve.pigeonID);
@@ -60,6 +64,8 @@ public class Swerve extends SubsystemBase {
             new SwerveModule(3, SwerveSettings.Swerve.Mod3.constants, sub_tab)
         };
 
+        events.put("example", new ExampleAuto1(this));
+
         this.swerveOdometry = new SwerveDriveOdometry(SwerveSettings.Swerve.swerveKinematics, getYaw(), getModulePositions());
         last_pose = swerveOdometry.getPoseMeters();
         last_instant = Instant.now();
@@ -71,14 +77,14 @@ public class Swerve extends SubsystemBase {
             new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
             new PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
             this::setModuleStates, // Module states consumer used to output to the drive subsystem
-            eventMap,
+            events,
             this // The drive subsystem. Used to properly set the requirements of path following commands
         );
 
-        sub_tab.addDouble("IMU2", () -> getYaw().getDegrees())
-        .withWidget(BuiltInWidgets.kGyro)
-        .withSize(2, 2)
-        .withPosition(1, 3);
+        // sub_tab.addDouble("IMU2", () -> getYaw().getDegrees())
+        // .withWidget(BuiltInWidgets.kGyro)
+        // .withSize(2, 2)
+        // .withPosition(1, 3);
 
         sub_tab.addDouble("Chassis Speedometer: MPS", () -> getChassisSpeed())
         .withWidget(BuiltInWidgets.kDial)
@@ -101,6 +107,9 @@ public class Swerve extends SubsystemBase {
             .withWidget(BuiltInWidgets.kNumberBar)
             .withProperties(Map.of("Min", 0, "Max", SwerveSettings.Swerve.drivePeakCurrentLimit));
         }
+        // for (Enum<PATH_LIST> enu: PATH_LIST.values()) {
+        //     path_list.put(enu, getFullAuto(PathPlanner.loadPathGroup(enu.toString(), )));
+        // }
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
