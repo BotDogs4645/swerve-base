@@ -1,8 +1,10 @@
 package frc.swervelib.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.pathplanner.lib.PathConstraints;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -10,11 +12,11 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public final class SwerveSettings {
-    public static double deadzone = 0.04;
+    public static double deadzone = 0.1;
 
     public static final int leftX = 1;
     public static final int leftY = 0;
-    public static final int rightX = 2;
+    public static final int rightX = 4;
 
     public static final class Swerve {
         public static final int pigeonID = 13;
@@ -73,8 +75,8 @@ public final class SwerveSettings {
         public static final double driveKA = (0.27 / 12);
 
         /* Swerve Profiling Values */
-        public static double maxSpeed = 4.5; //meters per second * 4.5
-        public static double maxAngularVelocity = 12;
+        public static double maxSpeed = 1; //meters per second * 4.5
+        public static double maxAngularVelocity = 15;
 
         /* Neutral Modes */
         public static NeutralMode angleNeutralMode = NeutralMode.Coast;
@@ -99,7 +101,7 @@ public final class SwerveSettings {
             public static final int driveMotorID = 6;
             public static final int angleMotorID = 5;
             public static final int canCoderID = 11;
-            public static final double angleOffset = 354.64;
+            public static final double angleOffset = 177.45;
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, "Zero", angleMotorID, canCoderID, angleOffset, TESTING_TYPE.NONE);
         }
@@ -109,7 +111,7 @@ public final class SwerveSettings {
             public static final int driveMotorID = 7;
             public static final int angleMotorID = 8;
             public static final int canCoderID = 12;
-            public static final double angleOffset = 324.32;
+            public static final double angleOffset = 145.107;
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, "One", angleMotorID, canCoderID, angleOffset, TESTING_TYPE.NONE);
         }
@@ -119,7 +121,7 @@ public final class SwerveSettings {
             public static final int driveMotorID = 3;
             public static final int angleMotorID = 4;
             public static final int canCoderID = 9;
-            public static final double angleOffset = 102.92;
+            public static final double angleOffset = 285.47;
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, "Two", angleMotorID, canCoderID, angleOffset, TESTING_TYPE.NONE);
         }
@@ -129,7 +131,7 @@ public final class SwerveSettings {
             public static final int driveMotorID = 2;
             public static final int angleMotorID = 1;
             public static final int canCoderID = 10;
-            public static final double angleOffset = 79.80;
+            public static final double angleOffset = 258.574;
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, "Three", angleMotorID, canCoderID, angleOffset, TESTING_TYPE.NONE);
         }
@@ -150,6 +152,27 @@ public final class SwerveSettings {
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
             new TrapezoidProfile.Constraints(
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+      }
+
+      public enum PATH_LIST {
+        Path1("Path1", new PathConstraints(2, 2));
+
+        private String path_name;
+        private PathConstraints constraints;
+
+        private PATH_LIST(String path_name, PathConstraints constraints) {
+            this.path_name = path_name;
+            this.constraints = constraints;
+        }
+       
+        @Override
+        public String toString() {
+            return path_name;
+        }
+
+        public PathConstraints getConstraints() {
+            return constraints;
+        }
       }
 
       public static final class ShuffleboardConstants {
