@@ -12,8 +12,10 @@ import frc.bd_util.BDManager;
 import frc.bd_util.custom_talon.SensorUnits;
 import frc.bd_util.custom_talon.TalonFXW;
 import frc.bd_util.pidtuner.PIDTunerTalon;
+import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.swervelib.math.Conversions;
+import frc.swervelib.util.SwerveSettings.ShuffleboardConstants.BOARD_PLACEMENT;
 import frc.swervelib.util.SwerveSettings.Swerve.TESTING_TYPE;
 
 import java.util.Map;
@@ -55,18 +57,18 @@ public class SwerveModule {
 
         lastAngle = getState().angle.getDegrees();
 
-        int[] placements = SwerveSettings.ShuffleboardConstants.temp_placements.get(moduleNumber);
+        BOARD_PLACEMENT placement = BOARD_PLACEMENT.valueOf("TEMP" + moduleNumber);
 
         layout = sub_tab.getLayout("module " + moduleNumber, BuiltInLayouts.kGrid)
         .withProperties(Map.of("Number of columns", 1, "Number of rows", 2))
-        .withPosition(placements[0], placements[1])
+        .withPosition(placement.getX(), placement.getY())
         .withSize(1, 2);
 
         layout.addDouble("Angle Temp", () -> (mAngleMotor.getTemperature() * (9.0/5.0)) + 32); // C -> F
         layout.addDouble("Drive Temp", () -> (mDriveMotor.getTemperature() * (9.0/5.0)) + 32);
 
         ShuffleboardTab tab = BDManager.getInstance().getInstanceManagerialTab();
-        if (SwerveSettings.Swerve.testing) {
+        if (Constants.testing) {
             ShuffleboardLayout lay = tab.getLayout("module " + moduleNumber, BuiltInLayouts.kGrid)
             .withProperties(Map.of("Number of columns", 1, "Number of rows", 2));
             lay.addDouble("Cancoder", () -> getCanCoder().getDegrees());

@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +17,7 @@ import frc.robot.Robot;
 import frc.robot.autos.ExampleAuto1;
 import frc.swervelib.util.SwerveSettings;
 import frc.swervelib.util.SwerveSettings.PATH_LIST;
+import frc.swervelib.util.SwerveSettings.ShuffleboardConstants.BOARD_PLACEMENT;
 import frc.swervelib.util.SwerveModule;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -38,8 +38,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
-    public HashMap<String, Command> events = new HashMap<>();
-    public HashMap<PATH_LIST, Command> path_list = new HashMap<>();
+    public HashMap<String, Command> events = new HashMap<String, Command>();
+    public HashMap<PATH_LIST, PathPlannerTrajectory> trajectories = new HashMap<PATH_LIST, PathPlannerTrajectory>();
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
@@ -81,22 +81,31 @@ public class Swerve extends SubsystemBase {
             this // The drive subsystem. Used to properly set the requirements of path following commands
         );
 
-        // sub_tab.addDouble("IMU2", () -> getYaw().getDegrees())
-        // .withWidget(BuiltInWidgets.kGyro)
+        sub_tab.addDouble("Pigeon IMU", () -> getYaw().getDegrees())
+        .withSize(2, 2)
+        .withPosition(4, 3)
+        .withWidget(BuiltInWidgets.kGyro);
+
+        // sub_tab.getLayout("IMU", BuiltInLayouts.kGrid)
+        // .withProperties(Map.of("Number of columns", 1, "Number of rows", 1, "Label position", "HIDDEN"))
         // .withSize(2, 2)
-        // .withPosition(1, 3);
+        // .withPosition(1, 3)
+        // .addDouble("IMU", () -> getYaw().getDegrees())
+        // .withWidget(BuiltInWidgets.kGyro);
 
         sub_tab.addDouble("Chassis Speedometer: MPS", () -> getChassisSpeed())
         .withWidget(BuiltInWidgets.kDial)
         .withProperties(Map.of("Min", 0, "Max", SwerveSettings.Swerve.maxSpeed, "Show value", true))
-        .withSize(4, 3);
+        .withSize(4, 3)
+        .withPosition(3, 0);
 
 
         for (int i = 0; i < mSwerveMods.length; i++) {
             SwerveModule cur = mSwerveMods[i];
+            BOARD_PLACEMENT placement = BOARD_PLACEMENT.valueOf("RPM" + i);
             ShuffleboardLayout layout = sub_tab.getLayout("mod " + cur.moduleNumber, BuiltInLayouts.kGrid)
             .withProperties(Map.of("Label Position", "HIDDEN", "Number of columns", 1, "Number of rows", 2))
-            .withPosition(SwerveSettings.ShuffleboardConstants.amp_rpm_placements.get(i)[0], SwerveSettings.ShuffleboardConstants.amp_rpm_placements.get(i)[1])
+            .withPosition(placement.getX(), placement.getY())
             .withSize(2, 2);
 
             layout.addDouble(1 + " " + i + 1, () -> Math.abs(cur.mDriveMotor.getObjectRotationsPerMinute()))
@@ -107,9 +116,12 @@ public class Swerve extends SubsystemBase {
             .withWidget(BuiltInWidgets.kNumberBar)
             .withProperties(Map.of("Min", 0, "Max", SwerveSettings.Swerve.drivePeakCurrentLimit));
         }
-        // for (Enum<PATH_LIST> enu: PATH_LIST.values()) {
-        //     path_list.put(enu, getFullAuto(PathPlanner.loadPathGroup(enu.toString(), )));
-        // }
+
+        // iterates through the available path enums, and then puts them into the available path
+        // hashmap. use the enums themselves to choose which path.
+        for (PATH_LIST enu: PATH_LIST.values()) {
+            trajectories.put(enu, PathPlanner.loadPath(enu.toString(), enu.getConstraints()));
+        }
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -194,7 +206,12 @@ public class Swerve extends SubsystemBase {
         return (SwerveSettings.Swerve.invertGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
     }
 
-    public Command getSoloCommand(PathPlannerTrajectory traj, boolean is_first) {
+    public void addEvent(String event_name, Command command_to_execute) {
+        events.put(event_name, command_to_execute);
+    }
+
+    public Command getSoloPathCommand(PATH_LIST traj_path, boolean is_first) {
+        PathPlannerTrajectory traj = trajectories.get(traj_path);
         return new SequentialCommandGroup(
             new InstantCommand(() -> {
               // Reset odometry for the first path you run during auto
@@ -206,15 +223,22 @@ public class Swerve extends SubsystemBase {
         );
     }
 
-    public Command getSoloCommand(PathPlannerTrajectory traj) {
-        return builder.followPathWithEvents(traj);
+    public Command getSoloPathCommand(PATH_LIST path) {
+        return builder.followPathWithEvents(trajectories.get(path));
     }
 
-    // Assuming this method is part of a drivetrain subsystem that provides the necessary methods
-    public Command getFullAuto(PathPlannerTrajectory... traj) {
-        ArrayList<PathPlannerTrajectory> path = new ArrayList<>(Arrays.asList(traj));
-        this.resetOdometry(traj[0].getInitialHolonomicPose());
-        return builder.fullAuto(path);
+    public Command getFullAutoPath(PATH_LIST... traj) {
+        ArrayList<PathPlannerTrajectory> paths = new ArrayList<PathPlannerTrajectory>();
+        for (int i = 0; i < traj.length; i++) {
+            paths.add(trajectories.get(traj[i]));
+        } 
+
+        SequentialCommandGroup sequential = new SequentialCommandGroup(
+            new InstantCommand(() -> this.resetOdometry(paths.get(0).getInitialHolonomicPose())),
+            builder.fullAuto(paths)
+        );
+
+        return sequential;
     }
 
     @Override
