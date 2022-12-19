@@ -1,8 +1,5 @@
 package frc.swervelib.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.pathplanner.lib.PathConstraints;
 
@@ -21,8 +18,6 @@ public final class SwerveSettings {
     public static final class Swerve {
         public static final int pigeonID = 13;
         public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
-
-        public static final boolean testing = true;
 
         /* Drivetrain Constants */
         public static final double trackWidth = Units.inchesToMeters(23.75);
@@ -155,7 +150,8 @@ public final class SwerveSettings {
       }
 
       public enum PATH_LIST {
-        Path1("Path1", new PathConstraints(2, 2));
+        Path1("Path1", new PathConstraints(2, 2)),
+        Path2("Path1", new PathConstraints(2, 2));
 
         private String path_name;
         private PathConstraints constraints;
@@ -176,18 +172,38 @@ public final class SwerveSettings {
       }
 
       public static final class ShuffleboardConstants {
-        public static final ArrayList<int[]> amp_rpm_placements = new ArrayList<>();
-        public static final ArrayList<int[]> temp_placements = new ArrayList<>();
-        static {
-            amp_rpm_placements.add(new int[] {5,0});
-            amp_rpm_placements.add(new int[] {7,0});
-            amp_rpm_placements.add(new int[] {5,3});
-            amp_rpm_placements.add(new int[] {7,3});
+        public enum BOARD_PLACEMENT {
+            RPM0("RPM0", 1, 0),
+            RPM1("RPM1", 7, 0),
+            RPM2("RPM2", 1, 3),
+            RPM3("RPM3", 7, 3),
+            TEMP0("TEMP0", 0, 0),
+            TEMP1("TEMP1", 9, 0),
+            TEMP2("TEMP2", 0, 3),
+            TEMP3("TEMP3", 9, 3);
+    
+            private String name;
+            private int x;
+            private int y;
+    
+            private BOARD_PLACEMENT(String name, int x, int y) {
+                this.name = name;
+                this.x = x;
+                this.y = y;
+            }
+           
+            @Override
+            public String toString() {
+                return name;
+            }
+    
+            public int getX() {
+                return x;
+            }
 
-            temp_placements.add(new int[] {4, 0});
-            temp_placements.add(new int[] {9, 0});
-            temp_placements.add(new int[] {4, 3});
-            temp_placements.add(new int[] {9, 3});
-        }
+            public int getY() {
+                return y;
+            }
+          }
       }
 }
