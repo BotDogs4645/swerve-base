@@ -14,7 +14,6 @@ import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import frc.robot.Robot;
-import frc.robot.autos.ExampleAuto1;
 import frc.swervelib.util.SwerveSettings;
 import frc.swervelib.util.SwerveSettings.PATH_LIST;
 import frc.swervelib.util.SwerveSettings.ShuffleboardConstants.BOARD_PLACEMENT;
@@ -55,7 +54,7 @@ public class Swerve extends SubsystemBase {
         gyro.configFactoryDefault();
         zeroGyro();
         this.chassis_speed = 0;
-        this.sub_tab = Shuffleboard.getTab("swerve_tab2");
+        this.sub_tab = Shuffleboard.getTab("swerve_tab");
 
         mSwerveMods = new SwerveModule[] {
             new SwerveModule(0, SwerveSettings.Swerve.Mod0.constants, sub_tab),
@@ -63,8 +62,6 @@ public class Swerve extends SubsystemBase {
             new SwerveModule(2, SwerveSettings.Swerve.Mod2.constants, sub_tab),
             new SwerveModule(3, SwerveSettings.Swerve.Mod3.constants, sub_tab)
         };
-
-        events.put("example", new ExampleAuto1(this));
 
         this.swerveOdometry = new SwerveDriveOdometry(SwerveSettings.Swerve.swerveKinematics, getYaw(), getModulePositions());
         last_pose = swerveOdometry.getPoseMeters();

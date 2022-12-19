@@ -59,7 +59,7 @@ public class SwerveModule {
 
         BOARD_PLACEMENT placement = BOARD_PLACEMENT.valueOf("TEMP" + moduleNumber);
 
-        layout = sub_tab.getLayout("module " + moduleNumber, BuiltInLayouts.kGrid)
+        layout = sub_tab.getLayout("m" + moduleNumber, BuiltInLayouts.kGrid)
         .withProperties(Map.of("Number of columns", 1, "Number of rows", 2))
         .withPosition(placement.getX(), placement.getY())
         .withSize(1, 2);
