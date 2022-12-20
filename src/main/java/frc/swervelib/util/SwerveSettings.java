@@ -1,8 +1,7 @@
 package frc.swervelib.util;
 
-import java.util.ArrayList;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.pathplanner.lib.PathConstraints;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -10,17 +9,15 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public final class SwerveSettings {
-    public static double deadzone = 0.04;
+    public static double deadzone = 0.1;
 
     public static final int leftX = 1;
     public static final int leftY = 0;
-    public static final int rightX = 2;
+    public static final int rightX = 4;
 
     public static final class Swerve {
         public static final int pigeonID = 13;
         public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
-
-        public static final boolean testing = true;
 
         /* Drivetrain Constants */
         public static final double trackWidth = Units.inchesToMeters(23.75);
@@ -50,8 +47,8 @@ public final class SwerveSettings {
         public static final double anglePeakCurrentDuration = 0.1;
         public static final boolean angleEnableCurrentLimit = true;
 
-        public static final int driveContinuousCurrentLimit = 35;
-        public static final int drivePeakCurrentLimit = 55;
+        public static final int driveContinuousCurrentLimit = 25;
+        public static final int drivePeakCurrentLimit = 35;
         public static final double drivePeakCurrentDuration = 0.1;
         public static final boolean driveEnableCurrentLimit = true;
 
@@ -62,9 +59,9 @@ public final class SwerveSettings {
         public static final double angleKF = 0.0;
 
         /* Drive Motor PID Values */
-        public static final double driveKP = 0.025;
+        public static final double driveKP = 0.05;
         public static final double driveKI = 0.0;
-        public static final double driveKD = 0.0;
+        public static final double driveKD = 12.0;
         public static final double driveKF = 0.0;
 
         /* Drive Motor Characterization Values */
@@ -73,8 +70,8 @@ public final class SwerveSettings {
         public static final double driveKA = (0.27 / 12);
 
         /* Swerve Profiling Values */
-        public static double maxSpeed = 4.5; //meters per second * 4.5
-        public static double maxAngularVelocity = 12;
+        public static double maxSpeed = 1.5; // mps = 3.96
+        public static double maxAngularVelocity = 5;
 
         /* Neutral Modes */
         public static NeutralMode angleNeutralMode = NeutralMode.Coast;
@@ -99,7 +96,7 @@ public final class SwerveSettings {
             public static final int driveMotorID = 6;
             public static final int angleMotorID = 5;
             public static final int canCoderID = 11;
-            public static final double angleOffset = 354.64;
+            public static final double angleOffset = 177.45;
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, "Zero", angleMotorID, canCoderID, angleOffset, TESTING_TYPE.NONE);
         }
@@ -109,7 +106,7 @@ public final class SwerveSettings {
             public static final int driveMotorID = 7;
             public static final int angleMotorID = 8;
             public static final int canCoderID = 12;
-            public static final double angleOffset = 324.32;
+            public static final double angleOffset = 145.107;
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, "One", angleMotorID, canCoderID, angleOffset, TESTING_TYPE.NONE);
         }
@@ -119,7 +116,7 @@ public final class SwerveSettings {
             public static final int driveMotorID = 3;
             public static final int angleMotorID = 4;
             public static final int canCoderID = 9;
-            public static final double angleOffset = 102.92;
+            public static final double angleOffset = 285.47;
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, "Two", angleMotorID, canCoderID, angleOffset, TESTING_TYPE.NONE);
         }
@@ -129,7 +126,7 @@ public final class SwerveSettings {
             public static final int driveMotorID = 2;
             public static final int angleMotorID = 1;
             public static final int canCoderID = 10;
-            public static final double angleOffset = 79.80;
+            public static final double angleOffset = 258.574;
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, "Three", angleMotorID, canCoderID, angleOffset, TESTING_TYPE.NONE);
         }
@@ -152,19 +149,62 @@ public final class SwerveSettings {
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
       }
 
-      public static final class ShuffleboardConstants {
-        public static final ArrayList<int[]> amp_rpm_placements = new ArrayList<>();
-        public static final ArrayList<int[]> temp_placements = new ArrayList<>();
-        static {
-            amp_rpm_placements.add(new int[] {5,0});
-            amp_rpm_placements.add(new int[] {7,0});
-            amp_rpm_placements.add(new int[] {5,3});
-            amp_rpm_placements.add(new int[] {7,3});
+      public enum PATH_LIST {
+        Path1("Path1", new PathConstraints(2, 2)),
+        Path2("Path2", new PathConstraints(2, 2)),
+        Path3("New Path", new PathConstraints(1, .3));
 
-            temp_placements.add(new int[] {4, 0});
-            temp_placements.add(new int[] {9, 0});
-            temp_placements.add(new int[] {4, 3});
-            temp_placements.add(new int[] {9, 3});
+        private String path_name;
+        private PathConstraints constraints;
+
+        private PATH_LIST(String path_name, PathConstraints constraints) {
+            this.path_name = path_name;
+            this.constraints = constraints;
         }
+       
+        @Override
+        public String toString() {
+            return path_name;
+        }
+
+        public PathConstraints getConstraints() {
+            return constraints;
+        }
+      }
+
+      public static final class ShuffleboardConstants {
+        public enum BOARD_PLACEMENT {
+            RPM0("RPM0", 1, 0),
+            RPM1("RPM1", 7, 0),
+            RPM2("RPM2", 1, 3),
+            RPM3("RPM3", 7, 3),
+            TEMP0("TEMP0", 0, 0),
+            TEMP1("TEMP1", 9, 0),
+            TEMP2("TEMP2", 0, 3),
+            TEMP3("TEMP3", 9, 3);
+    
+            private String name;
+            private int x;
+            private int y;
+    
+            private BOARD_PLACEMENT(String name, int x, int y) {
+                this.name = name;
+                this.x = x;
+                this.y = y;
+            }
+           
+            @Override
+            public String toString() {
+                return name;
+            }
+    
+            public int getX() {
+                return x;
+            }
+
+            public int getY() {
+                return y;
+            }
+          }
       }
 }

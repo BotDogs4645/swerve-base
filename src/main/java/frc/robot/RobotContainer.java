@@ -6,13 +6,20 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.autos.*;
+import frc.bd_util.driver.JoyRumbler;
+import frc.bd_util.driver.JoyRumbler.RUMBLE_TYPE;
 import frc.robot.commands.*;
+import frc.robot.commands.autos.ExampleAuto1;
+import frc.robot.commands.autos.ExampleCommand;
 import frc.robot.subsystems.*;
+import frc.swervelib.util.SwerveSettings;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -22,6 +29,7 @@ import frc.robot.subsystems.*;
  */
 public class RobotContainer {
   /* Controllers */
+  
   private final XboxController driver = new XboxController(0);
 
   /* Driver Buttons */
@@ -29,17 +37,24 @@ public class RobotContainer {
 
   /* Subsystems */
   private final Swerve swerve = new Swerve();
-
+  SendableChooser<Command> autoChooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     DriverStation.silenceJoystickConnectionWarning(true);
     boolean fieldRelative = true;
-    boolean openLoop = false;
+    boolean openLoop = true;
     swerve.setDefaultCommand(new TeleopSwerve(swerve, driver, fieldRelative, openLoop));
+    
+    Shuffleboard.getTab("auto").add(autoChooser);
+
+    JoyRumbler rumbler = new JoyRumbler(driver);
+    rumbler.addRumbleScenario(() -> RobotController.getBatteryVoltage() < 10, RUMBLE_TYPE.SHAKER);
 
     // Configure the button bindings
     configureButtonBindings();
+    // Configure autonomous mode
+    configureAutonomous();
   }
 
   /**
@@ -53,13 +68,22 @@ public class RobotContainer {
     zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroGyro()));
   }
 
+  private void configureAutonomous() {
+    // when swerve reaches the event labeled "fire_ball", ExampleCommand will run.
+    // note: swerve's path will not resume until ExampleCommand finishes unless,
+    // it is set as a command that can run in parallel :)
+    swerve.addEvent("fire_ball", new ExampleCommand());
+    autoChooser.addOption("full auto 1", new ExampleAuto1(swerve));
+    autoChooser.addOption("path important", swerve.getFullAutoPath(SwerveSettings.PATH_LIST.Path3));
+  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
+  public SendableChooser<Command> getChooser() {
     // An ExampleCommand will run in autonomous
-    return new ExampleAuto1(swerve);
+    return autoChooser;
   }
 }

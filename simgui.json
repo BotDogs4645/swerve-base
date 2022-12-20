@@ -1,36 +1,7 @@
 {
-  "HALProvider": {
-    "Other Devices": {
-      "Talon FX[5]": {
-        "header": {
-          "open": true
-        }
-      },
-      "Talon FX[5]/Integrated Sensor": {
-        "header": {
-          "open": true
-        }
-      },
-      "Talon FX[7]": {
-        "header": {
-          "open": true
-        }
-      }
-    }
-  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo"
-    }
-  },
-  "NetworkTables": {
-    "transitory": {
-      "Shuffleboard": {
-        "open": true,
-        "swerve_tab2": {
-          "open": true
-        }
-      }
     }
   }
 }
