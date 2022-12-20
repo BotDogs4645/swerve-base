@@ -48,7 +48,6 @@ public class Swerve extends SubsystemBase {
     public Pose2d last_pose;
     public Instant last_instant;
 
-
     /**
      * A swerve implementation using MK4 SDS modules, with full field oriented features.<p>
      * Original code from Team 264, heavily modified by Dave and Aidan
@@ -65,7 +64,7 @@ public class Swerve extends SubsystemBase {
         zeroGyro();
 
         // Used in the chassis speed calculation, check update() for more info
-        this.chassis_speed = 0;
+        this.chassis_speed = 0.0;
 
         // Gets us the swerve tab.
         this.sub_tab = Shuffleboard.getTab("swerve_tab");
@@ -95,7 +94,7 @@ public class Swerve extends SubsystemBase {
             this::getPose, // Pose2d supplier
             this::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
             SwerveSettings.Swerve.swerveKinematics, // SwerveDriveKinematics
-            new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+            new PIDConstants(2.5, 0.0, 0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
             new PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
             this::setModuleStates, // Module states consumer used to output to the drive subsystem
             events,
@@ -104,15 +103,15 @@ public class Swerve extends SubsystemBase {
 
         // Gyro initialization, we use a Pigeon and we want the Yaw in degrees so we can directly
         // show it on Shuffleboard.
-        sub_tab.addDouble("Pigeon IMU", () -> getYaw().getDegrees())
-        .withSize(2, 2)
-        .withPosition(4, 3)
-        .withWidget(BuiltInWidgets.kGyro);
+        // sub_tab.addInteger("Pigeon IMU", () -> (int)getYaw().getDegrees())
+        // .withSize(2, 2)
+        // .withPosition(4, 3)
+        // .withWidget(BuiltInWidgets.kGyro);
 
         // Our speedometer, uses the chassis_speed variable.
         sub_tab.addDouble("Chassis Speedometer: MPS", () -> getChassisSpeed())
         .withWidget(BuiltInWidgets.kDial)
-        .withProperties(Map.of("Min", 0, "Max", SwerveSettings.Swerve.maxSpeed, "Show value", true))
+        .withProperties(Map.of("Min", 0.0, "Max", SwerveSettings.Swerve.maxSpeed, "Show value", true))
         .withSize(4, 3)
         .withPosition(3, 0);
 
@@ -121,15 +120,15 @@ public class Swerve extends SubsystemBase {
             SwerveModule cur = mSwerveMods[i];
             BOARD_PLACEMENT placement = BOARD_PLACEMENT.valueOf("RPM" + i);
             ShuffleboardLayout layout = sub_tab.getLayout("mod " + cur.moduleNumber, BuiltInLayouts.kGrid)
-            .withProperties(Map.of("Label Position", "HIDDEN", "Number of columns", 1, "Number of rows", 2))
+            .withProperties(Map.of("Number of columns", 1, "Number of rows", 2))
             .withPosition(placement.getX(), placement.getY())
             .withSize(2, 2);
 
-            layout.addDouble(1 + " " + i + 1, () -> Math.abs(cur.mDriveMotor.getObjectRotationsPerMinute()))
+            layout.addDouble("RPM " + i, () -> Math.abs(cur.mDriveMotor.getObjectRotationsPerMinute()))
             .withWidget(BuiltInWidgets.kDial)
             .withProperties(Map.of("Min", 0, "Max", 800, "Show value", true));
 
-            layout.addDouble(1 + " " + i, () -> cur.mDriveMotor.getSupplyCurrent())
+            layout.addDouble("AMPS " + i, () -> cur.mDriveMotor.getSupplyCurrent())
             .withWidget(BuiltInWidgets.kNumberBar)
             .withProperties(Map.of("Min", 0, "Max", SwerveSettings.Swerve.drivePeakCurrentLimit));
         }

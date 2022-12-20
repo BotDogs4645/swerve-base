@@ -64,8 +64,8 @@ public class SwerveModule {
         .withPosition(placement.getX(), placement.getY())
         .withSize(1, 2);
 
-        layout.addDouble("Angle Temp", () -> (mAngleMotor.getTemperature() * (9.0/5.0)) + 32); // C -> F
-        layout.addDouble("Drive Temp", () -> (mDriveMotor.getTemperature() * (9.0/5.0)) + 32);
+        layout.addDouble("Angle Temp", () -> mAngleMotor.getTemperature()); // C -> F
+        layout.addDouble("Drive Temp", () -> mDriveMotor.getTemperature());
 
         ShuffleboardTab tab = BDManager.getInstance().getInstanceManagerialTab();
         if (Constants.testing) {

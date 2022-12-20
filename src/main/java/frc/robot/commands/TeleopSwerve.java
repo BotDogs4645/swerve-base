@@ -30,14 +30,20 @@ public class TeleopSwerve extends CommandBase {
 
     @Override
     public void execute() {
-        double yAxis = controller.getRawAxis(SwerveSettings.leftX);
-        double xAxis = controller.getRawAxis(SwerveSettings.leftY);
-        double rAxis = controller.getRawAxis(SwerveSettings.rightX);
+        double yAxis = -controller.getRawAxis(SwerveSettings.leftX);
+        double xAxis = -controller.getRawAxis(SwerveSettings.leftY);
+        double rAxis = -controller.getRawAxis(SwerveSettings.rightX);
         
         /* Deadbands */
         yAxis = (Math.abs(yAxis) < SwerveSettings.deadzone) ? 0 : yAxis;
         xAxis = (Math.abs(xAxis) < SwerveSettings.deadzone) ? 0 : xAxis;
         rAxis = (Math.abs(rAxis) < SwerveSettings.deadzone) ? 0 : rAxis;
+
+        double save = yAxis;
+        yAxis = Math.signum(save) * save * save;
+
+        double save2 = xAxis;
+        xAxis = Math.signum(save2) * save2 * save2;
 
         translation = new Translation2d(yAxis, xAxis).times(SwerveSettings.Swerve.maxSpeed);
         rotation = rAxis * SwerveSettings.Swerve.maxAngularVelocity;

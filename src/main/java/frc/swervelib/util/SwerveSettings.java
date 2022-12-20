@@ -47,8 +47,8 @@ public final class SwerveSettings {
         public static final double anglePeakCurrentDuration = 0.1;
         public static final boolean angleEnableCurrentLimit = true;
 
-        public static final int driveContinuousCurrentLimit = 35;
-        public static final int drivePeakCurrentLimit = 55;
+        public static final int driveContinuousCurrentLimit = 25;
+        public static final int drivePeakCurrentLimit = 35;
         public static final double drivePeakCurrentDuration = 0.1;
         public static final boolean driveEnableCurrentLimit = true;
 
@@ -59,9 +59,9 @@ public final class SwerveSettings {
         public static final double angleKF = 0.0;
 
         /* Drive Motor PID Values */
-        public static final double driveKP = 0.025;
+        public static final double driveKP = 0.05;
         public static final double driveKI = 0.0;
-        public static final double driveKD = 0.0;
+        public static final double driveKD = 12.0;
         public static final double driveKF = 0.0;
 
         /* Drive Motor Characterization Values */
@@ -70,8 +70,8 @@ public final class SwerveSettings {
         public static final double driveKA = (0.27 / 12);
 
         /* Swerve Profiling Values */
-        public static double maxSpeed = 1; //meters per second * 4.5
-        public static double maxAngularVelocity = 15;
+        public static double maxSpeed = 1.5; // mps = 3.96
+        public static double maxAngularVelocity = 5;
 
         /* Neutral Modes */
         public static NeutralMode angleNeutralMode = NeutralMode.Coast;
@@ -151,7 +151,8 @@ public final class SwerveSettings {
 
       public enum PATH_LIST {
         Path1("Path1", new PathConstraints(2, 2)),
-        Path2("Path2", new PathConstraints(2, 2));
+        Path2("Path2", new PathConstraints(2, 2)),
+        Path3("New Path", new PathConstraints(1, .3));
 
         private String path_name;
         private PathConstraints constraints;
