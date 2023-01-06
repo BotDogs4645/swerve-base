@@ -72,7 +72,7 @@ public class Vision extends SubsystemBase {
 
 
         for (AprilTagOption avail : AprilTagOption.values()) {
-            choose_from.add(avail.name, tag_locations.getTags().get(avail.id));
+            choose_from.put(avail.name, tag_locations.getTags().get(avail.id));
         }
     }
 
