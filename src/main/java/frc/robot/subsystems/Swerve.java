@@ -77,7 +77,7 @@ public class Swerve extends SubsystemBase {
 
         // SwerveDrivePoseEstimator instances are used to calculate and keep track of the Robot's
         // pose, which is essentially the coordinates and orientation of the robot.
-        this.swerveOdometry = new SwerveDrivePoseEstimator(null, getYaw(), getModulePositions(), new Pose2d());
+        this.swerveOdometry = new SwerveDrivePoseEstimator(SwerveDriveTrain.swerveKinematics, getYaw(), getModulePositions(), new Pose2d());
 
         // The SwerveAutoBuilder is used to create paths for this particular swerve drive.
         // All the PID is contained here, and no other commands relating to PathPlanner have to be created.

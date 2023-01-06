@@ -1,7 +1,10 @@
 {
   "NTProvider": {
     "types": {
-      "/FMSInfo": "FMSInfo"
+      "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Field/Field": "Field2d",
+      "/Shuffleboard/auto/SendableChooser[0]": "String Chooser",
+      "/Shuffleboard/swerve_tab/Pigeon IMU": "Gyro"
     }
   }
 }
