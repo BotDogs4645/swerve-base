@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 
 import org.photonvision.PhotonCamera;
@@ -17,7 +18,6 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.CameraConstants.CameraDefaults;
@@ -27,10 +27,11 @@ public class Vision extends SubsystemBase {
         ;
         
         private int id;
-        private AprilTag
+        private String name;
 
-        private AprilTagOption(int id) {
-
+        private AprilTagOption(int id, String name) {
+            this.id = id;
+            this.name = name;
         }
     }
 
@@ -42,7 +43,7 @@ public class Vision extends SubsystemBase {
 
     private AprilTagFieldLayout tag_locations;
 
-    private SendableChooser<>
+    private HashMap<String, AprilTag> choose_from = new HashMap<String, AprilTag>();
 
     public Vision() {
         this.driver_cam = new PhotonCamera("drivervision");
@@ -69,6 +70,10 @@ public class Vision extends SubsystemBase {
             tag_locations.setOrigin(OriginPosition.kRedAllianceWallRightSide);
         }
 
+
+        for (AprilTagOption avail : AprilTagOption.values()) {
+            choose_from.add(avail.name, tag_locations.getTags().get(avail.id));
+        }
     }
 
     @Override
