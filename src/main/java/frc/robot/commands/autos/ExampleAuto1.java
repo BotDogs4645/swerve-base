@@ -11,14 +11,6 @@ public class ExampleAuto1 extends SequentialCommandGroup {
         // or
         Command intro_path = s_Swerve.getSoloPathCommand(PathList.Path1, true);
         Command last_path = s_Swerve.getSoloPathCommand(PathList.Path2);
-
-        addCommands(
-            paths,
-            intro_path,
-            last_path
-        );
-    }
-}
         addCommands(
             paths,
             intro_path,
