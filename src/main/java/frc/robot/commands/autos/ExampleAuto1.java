@@ -19,3 +19,10 @@ public class ExampleAuto1 extends SequentialCommandGroup {
         );
     }
 }
+        addCommands(
+            paths,
+            intro_path,
+            last_path
+        );
+    }
+}
