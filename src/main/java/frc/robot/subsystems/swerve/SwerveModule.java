@@ -1,22 +1,22 @@
-package frc.swervelib.util;
+package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.bd_util.custom_talon.SensorUnits;
-import frc.bd_util.custom_talon.TalonFXW;
-import frc.bd_util.misc.BDManager;
-import frc.bd_util.pidtuner.PIDTunerTalon;
+import frc.bdlib.custom_talon.SensorUnits;
+import frc.bdlib.custom_talon.TalonFXW;
+import frc.bdlib.misc.BDManager;
 import frc.robot.Constants;
-import frc.robot.Robot;
-import frc.swervelib.math.Conversions;
-import frc.swervelib.util.SwerveSettings.ShuffleboardConstants.BOARD_PLACEMENT;
-import frc.swervelib.util.SwerveSettings.SwerveDriveTrain.TestingType;
+import frc.robot.util.swervehelper.CTREConfigs;
+import frc.robot.util.swervehelper.CTREModuleState;
+import frc.robot.util.swervehelper.Conversions;
+import frc.robot.util.swervehelper.SwerveModuleConstants;
+import frc.robot.util.swervehelper.SwerveSettings;
+import frc.robot.util.swervehelper.SwerveSettings.ShuffleboardConstants.BOARD_PLACEMENT;
 
 import java.util.Map;
 
@@ -25,6 +25,8 @@ import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.sensors.CANCoder;
 
 public class SwerveModule {
+    public static final CTREConfigs CTRE = SwerveSettings.CTRE;
+
     public String name;
     public int moduleNumber;
     private double angleOffset;
@@ -50,11 +52,11 @@ public class SwerveModule {
         configAngleEncoder();
 
         /* Angle Motor Config */
-        mAngleMotor = new TalonFXW(moduleConstants.angleMotorID, Robot.ctreConfigs.angleFXWConfig, SensorUnits.METRIC);
+        mAngleMotor = new TalonFXW(moduleConstants.angleMotorID, CTRE.angleFXWConfig, SensorUnits.METRIC);
         configAngleMotor();
 
         /* Drive Motor Config */
-        mDriveMotor = new TalonFXW(moduleConstants.driveMotorID, Robot.ctreConfigs.driveFXWConfig, SensorUnits.METRIC);
+        mDriveMotor = new TalonFXW(moduleConstants.driveMotorID, CTRE.driveFXWConfig, SensorUnits.METRIC);
         configDriveMotor();
 
         // gets the last angle for jitter analysis
@@ -69,25 +71,17 @@ public class SwerveModule {
         .withPosition(placement.getX(), placement.getY())
         .withSize(1, 3);
 
-        layout.addDouble("Angle Temp", () -> mAngleMotor.getTemperature()); // C -> F
+        layout.addDouble("Angle Temp", () -> mAngleMotor.getTemperature());
         layout.addDouble("Drive Temp", () -> mDriveMotor.getTemperature());
 
         // Place super specific fault analysis. Make sure to turn on testing to get these values.
         ShuffleboardTab tab = BDManager.getInstance().getInstanceManagerialTab();
+
         if (Constants.testing) {
             ShuffleboardLayout lay = tab.getLayout("module " + moduleNumber, BuiltInLayouts.kGrid)
             .withProperties(Map.of("Number of columns", 1, "Number of rows", 2));
             lay.addDouble("Cancoder", () -> getCanCoder().getDegrees());
             lay.addDouble("Integrated", () -> getState().angle.getDegrees());
-        }
-
-        // Testing PID values with this system. To enable, go to swerve settings.
-        if (moduleConstants.type == TestingType.DRIVE) {
-            new PIDTunerTalon(mDriveMotor, Shuffleboard.getTab("mod " + moduleNumber + " Drive PID Tuner"));
-        }
-
-        if (moduleConstants.type == TestingType.STEER) {
-            new PIDTunerTalon(mAngleMotor, Shuffleboard.getTab("mod " + moduleNumber + " Steer PID Tuner"));
         }
     }
 
@@ -115,12 +109,12 @@ public class SwerveModule {
 
     private void configAngleEncoder() {        
         angleEncoder.configFactoryDefault();
-        angleEncoder.configAllSettings(Robot.ctreConfigs.swerveCanCoderConfig);
+        angleEncoder.configAllSettings(CTRE.swerveCanCoderConfig);
     }
 
     private void configAngleMotor() {
         mAngleMotor.configFactoryDefault();
-        mAngleMotor.configAllSettings(Robot.ctreConfigs.swerveAngleFXConfig);
+        mAngleMotor.configAllSettings(CTRE.swerveAngleFXConfig);
         mAngleMotor.setInverted(SwerveSettings.SwerveDriveTrain.angleMotorInvert);
         mAngleMotor.setNeutralMode(SwerveSettings.SwerveDriveTrain.angleNeutralMode);
         resetToAbsolute();
@@ -128,7 +122,7 @@ public class SwerveModule {
 
     private void configDriveMotor() {        
         mDriveMotor.configFactoryDefault();
-        mDriveMotor.configAllSettings(Robot.ctreConfigs.swerveDriveFXConfig);
+        mDriveMotor.configAllSettings(CTRE.swerveDriveFXConfig);
         mDriveMotor.setInverted(SwerveSettings.SwerveDriveTrain.driveMotorInvert);
         mDriveMotor.setNeutralMode(SwerveSettings.SwerveDriveTrain.driveNeutralMode);
         mDriveMotor.setSelectedSensorPosition(0);

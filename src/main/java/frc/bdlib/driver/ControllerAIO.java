@@ -1,14 +1,14 @@
-package frc.bd_util.driver;
+package frc.bdlib.driver;
 
 import java.util.HashMap;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.bd_util.driver.JoystickAxisAIO.LineFunctionType;
-import frc.bd_util.misc.BDConstants.JoystickConstants.JoystickAxisID;
-import frc.bd_util.misc.BDConstants.JoystickConstants.JoystickButtonID;
-import frc.bd_util.misc.BDConstants.JoystickConstants.JoystickVariant;
+import frc.bdlib.driver.JoystickAxisAIO.LineFunctionType;
+import frc.bdlib.misc.BDConstants.JoystickConstants.JoystickAxisID;
+import frc.bdlib.misc.BDConstants.JoystickConstants.JoystickButtonID;
+import frc.bdlib.misc.BDConstants.JoystickConstants.JoystickVariant;
 
 public class ControllerAIO extends XboxController {
     private JoystickVariant joystick_type;

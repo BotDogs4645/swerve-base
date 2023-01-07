@@ -1,11 +1,11 @@
-package frc.bd_util.custom_talon;
+package frc.bdlib.custom_talon;
 
 import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.util.Units;
-import frc.bd_util.misc.BDManager;
-import frc.bd_util.misc.BDUpdatable;
+import frc.bdlib.misc.BDManager;
+import frc.bdlib.misc.BDUpdatable;
 
 /**
 * Custom implementation of the {@code WPI_TalonFX} class.

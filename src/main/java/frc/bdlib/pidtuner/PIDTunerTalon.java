@@ -1,4 +1,4 @@
-package frc.bd_util.pidtuner;
+package frc.bdlib.pidtuner;
 
 import java.util.EnumSet;
 import java.util.HashMap;

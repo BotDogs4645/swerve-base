@@ -6,5 +6,12 @@
       "/Shuffleboard/auto/SendableChooser[0]": "String Chooser",
       "/Shuffleboard/swerve_tab/Pigeon IMU": "Gyro"
     }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "Shuffleboard": {
+        "open": true
+      }
+    }
   }
 }

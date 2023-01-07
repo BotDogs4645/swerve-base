@@ -1,6 +1,4 @@
-package frc.swervelib.util;
-
-import frc.swervelib.util.SwerveSettings.SwerveDriveTrain.TestingType;
+package frc.robot.util.swervehelper;
 
 public class SwerveModuleConstants {
     public final int driveMotorID;
@@ -8,7 +6,6 @@ public class SwerveModuleConstants {
     public final int cancoderID;
     public final double angleOffset;
     public final String name;
-    public final TestingType type;
 
     /**
      * Swerve Module Constants to be used when creating swerve modules.
@@ -18,12 +15,11 @@ public class SwerveModuleConstants {
      * @param angleOffset
      * @param testing are we pid tuning?
      */
-    public SwerveModuleConstants(int driveMotorID, String name, int angleMotorID, int canCoderID, double angleOffset, TestingType type) {
+    public SwerveModuleConstants(int driveMotorID, String name, int angleMotorID, int canCoderID, double angleOffset) {
         this.driveMotorID = driveMotorID;
         this.name = name;
         this.angleMotorID = angleMotorID;
         this.cancoderID = canCoderID;
         this.angleOffset = angleOffset;
-        this.type = type;
     }
 }

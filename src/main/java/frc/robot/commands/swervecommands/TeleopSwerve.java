@@ -1,8 +1,8 @@
 package frc.robot.commands.swervecommands;
 
-import frc.bd_util.driver.JoystickAxisAIO;
-import frc.robot.subsystems.Swerve;
-import frc.swervelib.util.SwerveSettings.SwerveDriveTrain;
+import frc.bdlib.driver.JoystickAxisAIO;
+import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.util.swervehelper.SwerveSettings.SwerveDriveTrain;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 

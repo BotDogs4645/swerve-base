@@ -1,4 +1,4 @@
-package frc.bd_util.misc;
+package frc.bdlib.misc;
 
 public interface BDUpdatable {
     public abstract void update();

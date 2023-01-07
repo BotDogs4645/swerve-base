@@ -1,4 +1,4 @@
-package frc.swervelib.util;
+package frc.robot.util.swervehelper;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.pathplanner.lib.PathConstraints;
@@ -9,6 +9,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public final class SwerveSettings {
+    public static final CTREConfigs CTRE = new CTREConfigs();
+
     public static final class SwerveDriveTrain {
         public static final int pigeonID = 13;
         public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
@@ -79,11 +81,6 @@ public final class SwerveSettings {
         /* Angle Encoder Invert */
         public static final boolean canCoderInvert = false;
 
-        public enum TestingType {
-            NONE,
-            STEER,
-            DRIVE
-        }
 
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
@@ -93,7 +90,7 @@ public final class SwerveSettings {
             public static final int canCoderID = 11;
             public static final double angleOffset = 177.45;
             public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(driveMotorID, "Zero", angleMotorID, canCoderID, angleOffset, TestingType.NONE);
+                new SwerveModuleConstants(driveMotorID, "Zero", angleMotorID, canCoderID, angleOffset);
         }
 
         /* Front Right Module - Module 1 */
@@ -103,7 +100,7 @@ public final class SwerveSettings {
             public static final int canCoderID = 12;
             public static final double angleOffset = 145.107;
             public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(driveMotorID, "One", angleMotorID, canCoderID, angleOffset, TestingType.NONE);
+                new SwerveModuleConstants(driveMotorID, "One", angleMotorID, canCoderID, angleOffset);
         }
         
         /* Back Left Module - Module 2 */
@@ -113,7 +110,7 @@ public final class SwerveSettings {
             public static final int canCoderID = 9;
             public static final double angleOffset = 285.47;
             public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(driveMotorID, "Two", angleMotorID, canCoderID, angleOffset, TestingType.NONE);
+                new SwerveModuleConstants(driveMotorID, "Two", angleMotorID, canCoderID, angleOffset);
         }
 
         /* Back Right Module - Module 3 */
@@ -123,7 +120,7 @@ public final class SwerveSettings {
             public static final int canCoderID = 10;
             public static final double angleOffset = 258.574;
             public static final SwerveModuleConstants constants = 
-                new SwerveModuleConstants(driveMotorID, "Three", angleMotorID, canCoderID, angleOffset, TestingType.NONE);
+                new SwerveModuleConstants(driveMotorID, "Three", angleMotorID, canCoderID, angleOffset);
         }
 
     }

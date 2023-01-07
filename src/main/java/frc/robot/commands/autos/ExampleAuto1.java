@@ -1,7 +1,7 @@
 package frc.robot.commands.autos;
 
-import frc.robot.subsystems.Swerve;
-import frc.swervelib.util.SwerveSettings.PathList;
+import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.util.swervehelper.SwerveSettings.PathList;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 

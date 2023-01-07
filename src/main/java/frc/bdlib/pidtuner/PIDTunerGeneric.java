@@ -1,4 +1,4 @@
-package frc.bd_util.pidtuner;
+package frc.bdlib.pidtuner;
 
 class PIDTunerGeneric {
     protected PIDTunerGeneric() {

@@ -1,4 +1,4 @@
-package frc.swervelib.util;
+package frc.robot.util.swervehelper;
 
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
@@ -8,8 +8,8 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 
 import edu.wpi.first.math.util.Units;
-import frc.bd_util.custom_talon.TalonFXW;
-import frc.swervelib.util.SwerveSettings.SwerveDriveTrain;
+import frc.bdlib.custom_talon.TalonFXW;
+import frc.robot.util.swervehelper.SwerveSettings.SwerveDriveTrain;
 
 public final class CTREConfigs {
     public TalonFXConfiguration swerveAngleFXConfig;

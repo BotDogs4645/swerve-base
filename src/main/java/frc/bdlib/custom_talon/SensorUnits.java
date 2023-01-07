@@ -1,4 +1,4 @@
-package frc.bd_util.custom_talon;
+package frc.bdlib.custom_talon;
 /**
 * Unit control modes for use within the <code>TalonFXW</code> class. 
 * @author David Muchow

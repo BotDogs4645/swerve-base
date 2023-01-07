@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Optional;
 
 import org.photonvision.PhotonCamera;
@@ -43,9 +42,12 @@ public class Vision extends SubsystemBase {
 
     private AprilTagFieldLayout tag_locations;
 
-    private HashMap<String, AprilTag> choose_from = new HashMap<String, AprilTag>();
+    private ArrayList<Pair<String, AprilTag>> selectable_tags = new ArrayList<>();
+
+    private Pair<String, AprilTag> selected_apriltag;
 
     public Vision() {
+        
         this.driver_cam = new PhotonCamera("drivervision");
         driver_cam.setDriverMode(true);
 
@@ -70,9 +72,8 @@ public class Vision extends SubsystemBase {
             tag_locations.setOrigin(OriginPosition.kRedAllianceWallRightSide);
         }
 
-
-        for (AprilTagOption avail : AprilTagOption.values()) {
-            choose_from.put(avail.name, tag_locations.getTags().get(avail.id));
+        // add our list of supported apriltags to a linkedhashmap for easy iteration.
+        for (AprilTagOption avail: AprilTagOption.values()) {
         }
     }
 

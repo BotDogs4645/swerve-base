@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.swerve;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,10 +10,6 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
-import frc.swervelib.util.SwerveSettings.PathList;
-import frc.swervelib.util.SwerveSettings.SwerveDriveTrain;
-import frc.swervelib.util.SwerveSettings.ShuffleboardConstants.BOARD_PLACEMENT;
-import frc.swervelib.util.SwerveModule;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -33,6 +29,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.util.swervehelper.SwerveSettings.PathList;
+import frc.robot.util.swervehelper.SwerveSettings.SwerveDriveTrain;
+import frc.robot.util.swervehelper.SwerveSettings.ShuffleboardConstants.BOARD_PLACEMENT;
 
 public class Swerve extends SubsystemBase {
     public HashMap<String, Command> events = new HashMap<String, Command>();
@@ -47,16 +46,15 @@ public class Swerve extends SubsystemBase {
 
     /**
      * A swerve implementation using MK4 SDS modules, with full field oriented features.<p>
-     * Original code from Team 264, heavily modified by Dave and Aidan
+     * Original code from Team 364, heavily modified by Dave and Aidan
      * @return Swerve Drive subsystem
      */
     public Swerve() {
         // Declares and resets the Gyro to default. This wipes all settings about the gyro,
-        // making it easily customizable in code only.
+        // making it customizable in code only.
         this.gyro = new WPI_Pigeon2(SwerveDriveTrain.pigeonID);
         gyro.configFactoryDefault();
-        // We also zero the gyro. In future implementations, we might remove this 
-        // to allow us to save orientation data for matches.
+
         zeroGyro();
 
         // Used in the chassis speed calculation, check update() for more info
@@ -107,7 +105,7 @@ public class Swerve extends SubsystemBase {
         .withSize(4, 3)
         .withPosition(3, 0);
 
-        field = new Field2d();
+        this.field = new Field2d();
 
         ShuffleboardTab tab = Shuffleboard.getTab("Field");
         tab.add("Field", field)
@@ -296,9 +294,9 @@ public class Swerve extends SubsystemBase {
     }
 
     /**
-     * Used to get a path command from only one PATH_LIST trajectory. This variant is to get
+     * Used to get a path command from only one PathList trajectory. This variant is to get
      * the Command for the first path, is_first has to be true.
-     * @param traj_path The {@link PATH_LIST} trajectory from the established list of paths to use
+     * @param traj_path The {@link PathList} trajectory from the established list of paths to use
      * @param is_first The variable that determines whether or not to reset the gyro at the start.
      * @return the usable {@link Command}
      * 
@@ -317,8 +315,8 @@ public class Swerve extends SubsystemBase {
     }
 
     /**
-     * Used to get a path command from only one PATH_LIST trajectory.
-     * @param path The {@link PATH_LIST} trajectory from the established list of paths to use
+     * Used to get a path command from only one PathList trajectory.
+     * @param path The {@link PathList} trajectory from the established list of paths to use
      * @return the usable {@link Command} 
      */
     public Command getSoloPathCommand(PathList path) {
@@ -326,9 +324,9 @@ public class Swerve extends SubsystemBase {
     }
 
     /**
-     * Used to get a single command that runs all supplied trajectory {@link PATH_LIST} trajectories.<p>
+     * Used to get a single command that runs all supplied trajectory {@link PathList} trajectories.<p>
      * DOES NOT reset odometry at the beginning.
-     * @param traj A list of {@link PATH_LIST} trajectories to create a {@link Command} from
+     * @param traj A list of {@link PathList} trajectories to create a {@link Command} from
      * @return the usable {@link Command}
      */
     public Command getFullAutoPath(PathList... traj) {
@@ -364,7 +362,7 @@ public class Swerve extends SubsystemBase {
             SwerveDriveTrain.swerveKinematics.toChassisSpeeds(
                 states
             );
-        // considering x and y are 90 degrees out of phase, we can just use the pythagorean theorem
+        // considering x and y are orthogonal, we can just use the pythagorean theorem
         // to add the vectors together and get the chassis_speed in m/s.
 
         chassis_speed = Math.sqrt(Math.pow(speed.vxMetersPerSecond, 2) + Math.pow(speed.vyMetersPerSecond, 2));

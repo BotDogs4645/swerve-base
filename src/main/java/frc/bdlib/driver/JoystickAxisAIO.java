@@ -1,6 +1,6 @@
-package frc.bd_util.driver;
+package frc.bdlib.driver;
 
-import frc.bd_util.misc.BDConstants.JoystickConstants.JoystickAxisID;
+import frc.bdlib.misc.BDConstants.JoystickConstants.JoystickAxisID;
 
 public class JoystickAxisAIO {
     public enum LineFunctionType {
