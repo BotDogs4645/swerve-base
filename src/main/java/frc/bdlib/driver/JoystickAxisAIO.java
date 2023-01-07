@@ -1,5 +1,7 @@
 package frc.bdlib.driver;
 
+import java.util.function.BooleanSupplier;
+
 import frc.bdlib.misc.BDConstants.JoystickConstants.JoystickAxisID;
 
 public class JoystickAxisAIO {
@@ -13,19 +15,19 @@ public class JoystickAxisAIO {
         Aggressive {
             @Override
             public double multiplier(double in) {
-                return ((2/3) * in) + ((1/3) * Math.pow(in, 3));
+                return ((2.0/3.0) * in) + ((1.0/3.0) * Math.pow(in, 3));
             }
         },
         Intermediate {
             @Override
             public double multiplier(double in) {
-                return ((1/2) * in) + ((1/2) * Math.pow(in, 3));
+                return ((1.0/2.0) * in) + ((1.0/2.0) * Math.pow(in, 3));
             }
         },
         Gentle {
             @Override
             public double multiplier(double in) {
-                return ((1/3) * in) + ((2/3) * Math.pow(in, 3));
+                return ((1.0/3.0) * in) + ((2.0/3.0) * Math.pow(in, 3));
             }
         },
         Cubic {
@@ -76,7 +78,10 @@ public class JoystickAxisAIO {
 
         double value = (Math.abs(in) < deadzone) ? 0 : in;
         value = type.multiplier(in);
-
         return value;
+    }
+
+    public BooleanSupplier axisHigherThan(double value) {
+        return () -> this.getValue() > value;
     }
 }

@@ -1,28 +1,34 @@
 package frc.bdlib.driver;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.bdlib.driver.JoystickAxisAIO.LineFunctionType;
 import frc.bdlib.misc.BDConstants.JoystickConstants.JoystickAxisID;
 import frc.bdlib.misc.BDConstants.JoystickConstants.JoystickButtonID;
 import frc.bdlib.misc.BDConstants.JoystickConstants.JoystickVariant;
 
-public class ControllerAIO extends XboxController {
+public class ControllerAIO extends GenericHID {
     private JoystickVariant joystick_type;
     private HashMap<JoystickButtonID, JoystickButton> actual_buttons = new HashMap<JoystickButtonID, JoystickButton>();
 
     public ControllerAIO(final int port) {
         super(port);
-        joystick_type = JoystickVariant.findJoy(DriverStation.getJoystickName(super.getPort()));
-        if (joystick_type == null) {
+        Optional<JoystickVariant> found = JoystickVariant.findJoy(DriverStation.getJoystickName(super.getPort()));
+        if (found.isPresent()) {
+            joystick_type = found.get();
+            System.out.println("hello");
+        } else {
             joystick_type = JoystickVariant.XBOX;
         }
+
         for (JoystickButtonID id: JoystickButtonID.values()) {
             actual_buttons.put(id, new JoystickButton(this, joystick_type.getButton(id)));
         }
+
     }
 
     public JoystickButton getJoystickButton(JoystickButtonID id) {

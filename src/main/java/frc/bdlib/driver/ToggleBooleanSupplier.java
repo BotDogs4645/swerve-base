@@ -1,23 +1,26 @@
 package frc.bdlib.driver;
 
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class ToggleBooleanSupplier {
     //private JoystickButton orginal_button;
-    private Trigger updated_button;
     private boolean actual_value;
+    private double timeLastPressed = System.currentTimeMillis();
 
     public ToggleBooleanSupplier(JoystickButton button, double debounce) {
         //this.orginal_button = button;
-        this.updated_button = button.debounce(debounce, DebounceType.kFalling);
-        this.actual_value = updated_button.getAsBoolean();
+        this.actual_value = false;
 
-        updated_button.onTrue(
-            new InstantCommand(() -> {actual_value = !actual_value;})
-        );
+        new RunCommand(() -> {
+            if (button.getAsBoolean() == true && (System.currentTimeMillis() - timeLastPressed) / 1000 > debounce) {
+                actual_value = !actual_value;
+                timeLastPressed = System.currentTimeMillis();
+                System.out.println(actual_value);
+            }
+        })
+        .ignoringDisable(true)
+        .schedule();
     }
 
     public boolean getValue() {

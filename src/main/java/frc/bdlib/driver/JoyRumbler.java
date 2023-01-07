@@ -26,6 +26,7 @@ public class JoyRumbler extends SubsystemBase {
         for (RumblerType enu: RumblerType.values()) {
             shakers.put(enu, new ArrayList<BooleanSupplier>());
         }
+        xbox.setRumble(RumbleType.kBothRumble, 1.0);
     }
 
     public void addRumbleScenario(BooleanSupplier suppl, RumblerType rumble_type) {
@@ -54,38 +55,41 @@ public class JoyRumbler extends SubsystemBase {
     
     @Override
     public void periodic() {
-        if (!muter.getValue()) {
+        if (muter.getValue()) {
             if (analysis_mode) {
                 boolean leave = false;
                 for (BooleanSupplier bool: shakers.get(RumblerType.LEFT_SHAKER)) {
                     if (bool.getAsBoolean()) {
-                        xbox.setRumble(RumbleType.kLeftRumble, 1.0);
+                        System.out.println("enabled!");
+                        xbox.setRumble(RumbleType.kLeftRumble, 1);
                         leave = true;
                     }
                 }
                 if (!leave) {
-                    xbox.setRumble(RumbleType.kLeftRumble, 0.0);
+                    xbox.setRumble(RumbleType.kLeftRumble, 0);
                 }
 
                 boolean leave2 = false;
                 for (BooleanSupplier bool: shakers.get(RumblerType.RIGHT_SHAKER)) {
                     if (bool.getAsBoolean()) {
-                        xbox.setRumble(RumbleType.kRightRumble, 1.0);
+                        xbox.setRumble(RumbleType.kRightRumble, 1);
                         leave2 = true;
                     }
                 }
                 if (!leave2) {
-                    xbox.setRumble(RumbleType.kRightRumble, 0.0);
+                    xbox.setRumble(RumbleType.kRightRumble, 0);
                 }
             } else {
                 if (specific_supplier.getAsBoolean()) {
-                    xbox.setRumble(RumbleType.kLeftRumble, 1.0);
-                    xbox.setRumble(RumbleType.kRightRumble, 1.0);
+                    xbox.setRumble(RumbleType.kLeftRumble, 1);
+                    xbox.setRumble(RumbleType.kRightRumble, 1);
                 } else {
-                    xbox.setRumble(RumbleType.kLeftRumble, 0.0);
-                    xbox.setRumble(RumbleType.kRightRumble, 0.0);
+                    xbox.setRumble(RumbleType.kLeftRumble, 0);
+                    xbox.setRumble(RumbleType.kRightRumble, 0);
                 }
             }
+        } else {
+            xbox.setRumble(RumbleType.kBothRumble, 0);
         }
     }
 }

@@ -5,6 +5,7 @@
 package frc.bdlib.misc;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -18,6 +19,7 @@ public final class BDConstants {
     public static final class JoystickConstants {
         // add ids in this order
         public static enum JoystickButtonID {
+            NONE,
             kA,
             kB,
             kX,
@@ -40,16 +42,16 @@ public final class BDConstants {
         }
 
         public static enum JoystickVariant {
-            XBOX("Xbox One Controller", new int[] {1,2,3,4,5,6,9,10,7,8}, new int[] {0,1,4,5,2,3}, true),
+            XBOX("Controller (Xbox One For Windows)", new int[] {0,1,2,3,4,5,6,9,10,7,8}, new int[] {0,1,4,5,2,3}, true),
             ;
 
-            public static JoystickVariant findJoy(String idf) {
+            public static Optional<JoystickVariant> findJoy(String idf) {
                 for (JoystickVariant variant: JoystickVariant.values()) {
-                    if (variant.getIdf() == idf) {
-                        return variant;
+                    if (variant.getIdf().equals(idf)) {
+                        return Optional.of(variant);
                     }
                 }
-                return null;
+                return Optional.empty();
             }
             
             HashMap<JoystickButtonID, Integer> button_binds = new HashMap<JoystickButtonID, Integer>();
@@ -65,7 +67,7 @@ public final class BDConstants {
                     button_binds.put(JoystickButtonID.values()[i], buttonIDs[i]);
                 }
                 for (int i = 0; i < JoystickAxisID.values().length; i++) {
-                    axis_binds.put(JoystickAxisID.values()[i], buttonIDs[i]);
+                    axis_binds.put(JoystickAxisID.values()[i], axisIDs[i]);
                 }
             }
 

@@ -7,7 +7,6 @@ package frc.robot;
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -25,8 +24,6 @@ import frc.bdlib.misc.BDConstants.JoystickConstants.JoystickAxisID;
 import frc.bdlib.misc.BDConstants.JoystickConstants.JoystickButtonID;
 import frc.robot.commands.autos.ExampleAuto1;
 import frc.robot.commands.autos.ExampleCommand;
-import frc.robot.commands.swervecommands.OrientationFlipCommand;
-import frc.robot.commands.swervecommands.RotateAroundAbsolutePoint;
 import frc.robot.commands.swervecommands.TeleopSwerve;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.swerve.Swerve;
@@ -41,6 +38,7 @@ import frc.robot.util.swervehelper.SwerveSettings;
 public class RobotContainer {
   /* Controllers */
   private final ControllerAIO driver = new ControllerAIO(0);
+  // private final ControllerAIO manipulator = new ControllerAIO(1);
 
   /* Subsystems */
   private final Swerve swerve = new Swerve();
@@ -75,22 +73,35 @@ public class RobotContainer {
     JoystickAxisAIO rightXAxis = driver.getAxis(JoystickAxisID.kLeftX, LineFunctionType.Gentle, 0.05);
 
     /* Driver Buttons */
-    driver.getJoystickButton(JoystickButtonID.kA)
-      .onTrue(new InstantCommand(() -> swerve.zeroGyro()));
+    // driver.getJoystickButton(JoystickButtonID.kA)
+    //   .onTrue(new InstantCommand(() -> swerve.zeroGyro()));
 
-    driver.getJoystickButton(JoystickButtonID.kX)
-      .toggleOnTrue(new OrientationFlipCommand(
-        swerve, leftXAxis, leftYAxis
-      )
-    );
+    // driver.getJoystickButton(JoystickButtonID.kX)
+    //   .toggleOnTrue(new OrientationFlipCommand(
+    //     swerve, leftXAxis, leftYAxis
+    //   )
+    // );
 
-    driver.getJoystickButton(JoystickButtonID.kY)
-      .toggleOnTrue(new RotateAroundAbsolutePoint(
-        swerve, leftXAxis, leftYAxis, rightXAxis, 
-        () -> {return new Translation2d();}
-      ));
+    // driver.getJoystickButton(JoystickButtonID.kY)
+    //   .toggleOnTrue(new RotateAroundAbsolutePoint(
+    //     swerve, leftXAxis, leftYAxis, rightXAxis, 
+    //     () -> {return new Translation2d();}
+    //   ));
 
     /* Manipulator Buttons */
+    driver.getJoystickButton(JoystickButtonID.kX).and(driver.getAxis(JoystickAxisID.kRightTrigger).axisHigherThan(.5))
+      .onTrue(new InstantCommand(() -> {
+        vision.cursorLeft();
+      })
+    );
+
+    driver.getJoystickButton(JoystickButtonID.kB).and(driver.getAxis(JoystickAxisID.kRightTrigger).axisHigherThan(.5))
+      .onTrue(new InstantCommand(() -> {
+        vision.cursorRight();
+      })
+    );
+
+    // Vision bindings
 
     /* Default Commands */
     swerve.setDefaultCommand(
@@ -103,7 +114,9 @@ public class RobotContainer {
       if (possible_pose.isPresent()) {
         swerve.provideVisionInformation(possible_pose.get());
       }
-    });
+    })
+    .ignoringDisable(true)
+    .schedule();
   }
 
   private void configureAutonomous() {
